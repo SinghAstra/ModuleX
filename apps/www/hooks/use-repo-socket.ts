@@ -1,8 +1,8 @@
 import { env } from "@/env";
-import { FullRepoMetadata } from "@/services/repo-service";
+import type { FullRepoMetadata } from "@/services/repo-service";
 import { useQueryClient } from "@tanstack/react-query";
-import { Log } from "@understand-x/database";
-import { SOCKET_EVENTS } from "@understand-x/shared";
+import type { Log } from "@understand-x/database";
+import { REPO_STATUS, SOCKET_EVENTS } from "@understand-x/shared";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 
@@ -19,7 +19,7 @@ export const useRepoSocket = (repoId: string) => {
         return [newLog, ...(oldLogs || [])].slice(0, 50);
       });
 
-      if (newLog.status) {
+      if (newLog.status === REPO_STATUS.COMPLETED) {
         queryClient.setQueryData(
           ["repo", repoId],
           (oldRepo: FullRepoMetadata["repo"]) => ({
