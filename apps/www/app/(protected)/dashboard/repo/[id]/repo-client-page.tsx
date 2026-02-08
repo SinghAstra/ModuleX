@@ -1,7 +1,7 @@
 "use client";
 
 import { useRepoSocket } from "@/hooks/use-repo-socket";
-import { FullRepoMetadata } from "@/services/repo-service";
+import type { FullRepoMetadata } from "@/services/repo-service";
 import { useQuery } from "@tanstack/react-query";
 import { RepoStatus } from "@understand-x/database";
 import { CodeExplorer } from "./components/code-explorer";

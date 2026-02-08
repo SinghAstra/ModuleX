@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
-import { Box, Loader2, Search, Zap } from "lucide-react";
+import { Box, ChevronRight, Loader2, Search, Zap } from "lucide-react";
 import { useState } from "react";
 import { FileTree } from "./file-tree";
 // Assuming you created this server action or API caller
