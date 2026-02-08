@@ -1,7 +1,13 @@
 import { Badge } from "@/components/ui/badge";
+import { FullRepoMetadata } from "@/services/repo-service";
 import { FaGithub } from "react-icons/fa";
 
-export function RepoHeader({ repo, audit }: any) {
+interface RepoHeaderProps {
+  repo: FullRepoMetadata["repo"];
+  audit: FullRepoMetadata["audit"];
+}
+
+export function RepoHeader({ repo, audit }: RepoHeaderProps) {
   const statusColors = {
     QUEUED: "bg-slate-500",
     PROCESSING: "bg-amber-500 animate-pulse",

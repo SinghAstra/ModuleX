@@ -3,6 +3,7 @@
 import { useRepoSocket } from "@/hooks/use-repo-socket";
 import { FullRepoMetadata } from "@/services/repo-service";
 import { useQuery } from "@tanstack/react-query";
+import { RepoStatus } from "@understand-x/database";
 import { CodeExplorer } from "./components/code-explorer";
 import { RepoHeader } from "./components/repo-header";
 import { TerminalView } from "./components/terminal-view";
@@ -31,7 +32,7 @@ export default function RepoClientPage({
       <RepoHeader repo={repo} audit={audit} />
 
       <main className="flex-1 relative">
-        {repo.status === "COMPLETED" ? (
+        {repo.status === RepoStatus.COMPLETED ? (
           <CodeExplorer repoId={repoId} />
         ) : (
           <TerminalView logs={repo.logs} />
