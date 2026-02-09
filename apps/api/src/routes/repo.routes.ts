@@ -8,11 +8,7 @@ import { repositoryImportQueue } from "@/queue";
 import { AppError } from "@/utils/AppError";
 import { sendSuccess } from "@/utils/response";
 import { prisma, RepoStatus } from "@understand-x/database";
-import {
-  ImportRepoResponse,
-  importRepoSchema,
-  LogResponse,
-} from "@understand-x/shared";
+import { ImportRepoResponse, importRepoSchema } from "@understand-x/shared";
 import axios from "axios";
 import { Router } from "express";
 
@@ -88,49 +84,6 @@ router.post(
       );
     } catch (err) {
       return next(err);
-    }
-  }
-);
-
-router.get(
-  "/:id/logs",
-  authMiddleware,
-  async (req: AuthenticatedRequest, res, next) => {
-    try {
-      const { id: repoId } = req.params;
-      const { user } = req;
-      if (!user) {
-        return next(new AppError(401, "User not authenticated."));
-      }
-
-      const repository = await prisma.repository.findFirst({
-        where: {
-          id: repoId,
-          userId: user.id,
-        },
-      });
-
-      if (!repository) {
-        return next(new AppError(404, "Repository not found or access denied"));
-      }
-
-      const logs = await prisma.log.findMany({
-        where: { repositoryId: repoId },
-        orderBy: { createdAt: "asc" },
-      });
-
-      const formattedLogs: LogResponse[] = logs.map((log) => ({
-        ...log,
-        createdAt: log.createdAt.toISOString(),
-      }));
-
-      return sendSuccess<LogResponse[]>(
-        res,
-        formattedLogs,
-        "Logs retrieved successfully"
-      );
-    } catch (error) {
-      next(error);
     }
   }
 );
