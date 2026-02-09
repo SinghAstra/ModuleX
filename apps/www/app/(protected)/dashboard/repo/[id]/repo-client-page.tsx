@@ -1,7 +1,7 @@
 "use client";
 
+import type { FullRepoMetadata } from "@/actions/repo";
 import { useRepoSocket } from "@/hooks/use-repo-socket";
-import type { FullRepoMetadata } from "@/services/repo-service";
 import { useQuery } from "@tanstack/react-query";
 import { REPO_STATUS } from "@understand-x/shared";
 import { CodeExplorer } from "./components/code-explorer";
@@ -36,8 +36,8 @@ export default function RepoClientPage({
       <main className="flex-1 relative">
         {repo.status === REPO_STATUS.COMPLETED ? (
           <CodeExplorer repoId={repoId} />
-          // <h1>Code Explorer</h1>
         ) : (
+          // <h1>Code Explorer</h1>
           <h1>Terminal View</h1>
           // <TerminalView logs={repo.logs} />
         )}

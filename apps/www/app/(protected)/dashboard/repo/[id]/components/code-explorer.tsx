@@ -1,27 +1,24 @@
 "use client";
 
+import { getFileDetails, getRepoTree } from "@/actions/repo";
 import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import { Box, ChevronRight, Loader2, Search, Zap } from "lucide-react";
 import { useState } from "react";
 import { FileTree } from "./file-tree";
-// Assuming you created this server action or API caller
-import { getFileDetails, getRepoTree } from "@/services/repo-service";
 
 export function CodeExplorer({ repoId }: { repoId: string }) {
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
 
-  // 1. Fetch the Skeleton (Tree Structure)
   const { data: treeNodes, isLoading: isTreeLoading } = useQuery({
     queryKey: ["repo-tree", repoId],
     queryFn: () => getRepoTree(repoId),
   });
 
-  // 2. Fetch the "Nervous System" details for a specific file
   const { data: fileDetails, isLoading: isDetailsLoading } = useQuery({
     queryKey: ["file-details", selectedFileId],
     queryFn: () => getFileDetails(selectedFileId!),
-    enabled: !!selectedFileId, // Only run when a file is selected
+    enabled: !!selectedFileId,
   });
 
   return (

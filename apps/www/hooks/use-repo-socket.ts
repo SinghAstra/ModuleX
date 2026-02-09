@@ -1,5 +1,5 @@
+import type { FullRepoMetadata } from "@/actions/repo";
 import { env } from "@/env";
-import type { FullRepoMetadata } from "@/services/repo-service";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Log } from "@understand-x/database";
 import { REPO_STATUS, SOCKET_EVENTS } from "@understand-x/shared";

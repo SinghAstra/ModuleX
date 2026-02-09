@@ -1,5 +1,5 @@
+import { FullRepoMetadata } from "@/actions/repo";
 import { Badge } from "@/components/ui/badge";
-import { FullRepoMetadata } from "@/services/repo-service";
 import { FaGithub } from "react-icons/fa";
 
 interface RepoHeaderProps {

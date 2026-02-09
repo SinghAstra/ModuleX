@@ -1,4 +1,4 @@
-import { getRepoWithMetadata } from "@/services/repo-service";
+import { getRepoWithMetadata } from "@/actions/repo";
 import { notFound } from "next/navigation";
 import RepoClientPage from "./repo-client-page";
 

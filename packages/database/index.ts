@@ -1,5 +1,5 @@
 import { PrismaClient } from "./generated/client";
-export * from "./schema";
+export * from "./generated/client";
 
 declare global {
   var cachedPrisma: PrismaClient | undefined;
