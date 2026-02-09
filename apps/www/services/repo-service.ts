@@ -1,3 +1,5 @@
+"use server";
+
 import { Prisma, prisma } from "@understand-x/database";
 
 export async function getRepoWithMetadata(id: string) {

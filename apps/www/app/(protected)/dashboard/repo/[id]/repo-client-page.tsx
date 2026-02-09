@@ -36,8 +36,10 @@ export default function RepoClientPage({
       <main className="flex-1 relative">
         {repo.status === REPO_STATUS.COMPLETED ? (
           <CodeExplorer repoId={repoId} />
+          // <h1>Code Explorer</h1>
         ) : (
-          <TerminalView logs={repo.logs} />
+          <h1>Terminal View</h1>
+          // <TerminalView logs={repo.logs} />
         )}
       </main>
     </div>
