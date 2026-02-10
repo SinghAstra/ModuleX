@@ -1,5 +1,6 @@
 "use client";
 
+import { SidebarRepo } from "@/actions/repo";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -39,29 +40,23 @@ const sidebarNav: SidebarNavItem[] = [
   },
 ];
 
-interface Repository {
-  id: string;
-  name: string;
-  url: string;
-  createdAt: string;
+interface AppSidebarProps {
+  initialRepos: SidebarRepo[];
 }
 
-export function AppSidebar() {
+export function AppSidebar({ initialRepos }: AppSidebarProps) {
   const { toggleSidebar } = useSidebar();
   const isMobile = useIsMobile();
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [repositories, setRepositories] = useState<Repository[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  const { data: repos } = useQuery({
-    queryKey: ['recent-repos'],
-    initialData: initialRepos, 
-    staleTime: Infinity,       
+  const { data: repos } = useQuery<SidebarRepo[]>({
+    queryKey: ["recent-repos"],
+    initialData: initialRepos,
+    staleTime: Infinity,
   });
 
-  // Keyboard shortcut: Cmd+K to open search
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
@@ -174,7 +169,7 @@ export function AppSidebar() {
             )}
 
             {/* Empty State */}
-            {!isLoading && repositories.length === 0 && (
+            {repos.length === 0 && (
               <div className="px-3 py-6 text-center">
                 <p className="text-xs text-muted-foreground">
                   No repositories yet
@@ -205,7 +200,7 @@ export function AppSidebar() {
         <CommandList>
           <CommandEmpty>No repositories found.</CommandEmpty>
           <CommandGroup heading="Recent">
-            {repositories.slice(0, 5).map((repo) => (
+            {repos.slice(0, 5).map((repo) => (
               <CommandItem
                 key={repo.id}
                 value={repo.name}

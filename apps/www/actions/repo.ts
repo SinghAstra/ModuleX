@@ -125,6 +125,10 @@ export async function getSidebarRepos(userId: string) {
       avatarUrl: true,
     },
     orderBy: { createdAt: "desc" },
-    take: 10, 
+    take: 10,
   });
 }
+
+export type SidebarRepo = Prisma.PromiseReturnType<
+  typeof getSidebarRepos
+>[number];
