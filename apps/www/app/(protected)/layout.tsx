@@ -1,3 +1,4 @@
+import { getSidebarRepos } from "@/actions/repo";
 import { authOptions } from "@/lib/auth-options";
 import { ROUTES } from "@/lib/routes";
 import { getServerSession } from "next-auth";
@@ -17,9 +18,11 @@ const ProtectedLayout = async ({ children }: ProtectedLayoutProps) => {
     redirect(ROUTES.AUTH.SIGN_IN);
   }
 
+  const initialRepos = await getSidebarRepos(session.user.id);
+
   return (
     <div className="flex h-dvh overflow-hidden w-full">
-      <AppSidebar />
+      <AppSidebar initialRepos={initialRepos} />
       <div className="flex flex-col w-full h-full overflow-hidden">
         <ProtectedNavbar user={session.user} />
         <div className="w-full h-full overflow-hidden p-2 pt-0 lg:pl-0">

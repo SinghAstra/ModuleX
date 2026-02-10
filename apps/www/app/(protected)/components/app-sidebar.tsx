@@ -12,13 +12,13 @@ import {
 } from "@/components/ui/command";
 import { Sidebar, useSidebar } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useQuery } from "@tanstack/react-query";
 import {
   GitBranch,
   Home,
   LayoutGrid,
   LucideIcon,
   Plus,
-  PlusCircle,
   Search,
 } from "lucide-react";
 import Link from "next/link";
@@ -55,24 +55,11 @@ export function AppSidebar() {
   const [repositories, setRepositories] = useState<Repository[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch recent repositories
-  useEffect(() => {
-    const fetchRepositories = async () => {
-      try {
-        const response = await fetch("/api/repositories/recent");
-        if (response.ok) {
-          const data = await response.json();
-          setRepositories(data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch repositories:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchRepositories();
-  }, []);
+  const { data: repos } = useQuery({
+    queryKey: ['recent-repos'],
+    initialData: initialRepos, 
+    staleTime: Infinity,       
+  });
 
   // Keyboard shortcut: Cmd+K to open search
   useEffect(() => {
@@ -158,13 +145,13 @@ export function AppSidebar() {
             </div>
 
             {/* Recent Repositories Section */}
-            {repositories.length > 0 && (
+            {repos.length > 0 && (
               <div className="space-y-1">
                 <h3 className="px-3 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Recent
                 </h3>
                 <div className="space-y-1">
-                  {repositories.slice(0, 5).map((repo) => (
+                  {repos.slice(0, 5).map((repo) => (
                     <Link
                       key={repo.id}
                       href={`/repositories/${repo.id}`}
@@ -177,7 +164,7 @@ export function AppSidebar() {
                             : "text-muted-foreground hover:bg-muted/30"
                         }`}
                       >
-                        <GitBranch className="w-4 h-4 flex-shrink-0" />
+                        <GitBranch className="w-4 h-4 shrink-0" />
                         <span className="text-sm truncate">{repo.name}</span>
                       </div>
                     </Link>
