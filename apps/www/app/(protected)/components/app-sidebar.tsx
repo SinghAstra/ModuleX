@@ -12,6 +12,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Sidebar, useSidebar } from "@/components/ui/sidebar";
+import { siteConfig } from "@/config/site";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -85,27 +86,18 @@ export function AppSidebar({ initialRepos }: AppSidebarProps) {
 
   return (
     <>
-      <Sidebar className="border-r border-border/50 bg-background">
-        <div className="flex flex-col h-full">
-          {/* Logo/Branding */}
-          <div className="p-4 border-b border-border/30">
+      <Sidebar className="border-none!">
+        <div className="flex flex-col h-full bg-background">
+          <div className="p-3">
             <Link href="/dashboard" onClick={handleClick}>
-              <div className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                <div className="w-6 h-6 rounded bg-accent/20 flex items-center justify-center">
-                  <GitBranch className="w-4 h-4 text-accent" />
-                </div>
-                <span className="font-semibold text-sm text-foreground">
-                  Repolyze
-                </span>
-              </div>
+              <span className="text-lg">{siteConfig.name}</span>
             </Link>
           </div>
 
-          {/* Search/Quick Action */}
-          <div className="px-3 py-3 border-b border-border/30">
+          <div className="py-1 px-3">
             <button
               onClick={() => setOpen(true)}
-              className="w-full flex items-center justify-between gap-2 px-3 py-2 text-sm text-muted-foreground bg-muted/30 hover:bg-muted/50 rounded-md transition-all duration-200 border border-border/50"
+              className="w-full flex items-center justify-between gap-2 px-3 py-2 text-sm text-muted-foreground bg-muted/30 hover:bg-muted/50 rounded-md transition-all duration-200 border border-border/50 cursor-pointer"
             >
               <div className="flex items-center gap-2">
                 <Search className="w-4 h-4" />
@@ -118,28 +110,22 @@ export function AppSidebar({ initialRepos }: AppSidebarProps) {
             </button>
           </div>
 
-          {/* Navigation Groups */}
-          <div className="flex-1 overflow-y-auto px-2 py-3 space-y-4">
-            {/* Overview Section */}
+          <div className="flex-1 overflow-y-auto px-3 py-1 space-y-4">
             <div className="space-y-1">
-              <h3 className="px-3 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Overview
-              </h3>
               <Link href="/dashboard" onClick={handleClick}>
                 <div
                   className={`px-3 py-2 rounded flex items-center gap-2 transition-all duration-200 ${
                     pathname === "/dashboard"
-                      ? "bg-accent/15 text-accent"
+                      ? "bg-muted/30 text-foreground"
                       : "text-muted-foreground hover:bg-muted/30"
                   }`}
                 >
                   <Home className="w-4 h-4" />
-                  <span className="text-sm font-medium">Dashboard</span>
+                  <span className="text-sm ">Dashboard</span>
                 </div>
               </Link>
             </div>
 
-            {/* Recent Repositories Section */}
             {repos.length > 0 && (
               <div className="space-y-1">
                 <h3 className="px-3 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
@@ -149,14 +135,14 @@ export function AppSidebar({ initialRepos }: AppSidebarProps) {
                   {repos.slice(0, 5).map((repo) => (
                     <Link
                       key={repo.id}
-                      href={`/repositories/${repo.id}`}
+                      href={`/repo/${repo.id}`}
                       onClick={handleClick}
                     >
                       <div
-                        className={`px-3 py-2 rounded flex items-center gap-2 transition-all duration-200 truncate ${
-                          pathname === `/repositories/${repo.id}`
-                            ? "bg-accent/15 text-accent"
-                            : "text-muted-foreground hover:bg-muted/30"
+                        className={`px-3 py-2 rounded text-foreground/80 flex items-center gap-2 transition-all duration-200 truncate ${
+                          pathname === `/repo/${repo.id}`
+                            ? "bg-muted/30"
+                            : "hover:bg-muted/30"
                         }`}
                       >
                         <GitBranch className="w-4 h-4 shrink-0" />
@@ -168,7 +154,6 @@ export function AppSidebar({ initialRepos }: AppSidebarProps) {
               </div>
             )}
 
-            {/* Empty State */}
             {repos.length === 0 && (
               <div className="px-3 py-6 text-center">
                 <p className="text-xs text-muted-foreground">
@@ -178,13 +163,11 @@ export function AppSidebar({ initialRepos }: AppSidebarProps) {
             )}
           </div>
 
-          {/* Footer CTA */}
-          <div className="p-3 border-t border-border/30 space-y-2">
-            <Link href="/import-repository" onClick={handleClick}>
+          <div className="p-3">
+            <Link href="/import" onClick={handleClick}>
               <Button
                 size="sm"
-                className="w-full bg-accent/20 text-accent hover:bg-accent/30 transition-all duration-200"
-                variant="ghost"
+                className="w-full text-foreground bg-muted/20 hover:bg-muted/30 transition-all duration-300"
               >
                 <Plus className="w-4 h-4" />
                 <span>New Repository</span>
@@ -194,7 +177,6 @@ export function AppSidebar({ initialRepos }: AppSidebarProps) {
         </div>
       </Sidebar>
 
-      {/* Command Dialog for search */}
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Search repositories..." />
         <CommandList>
