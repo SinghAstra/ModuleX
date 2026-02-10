@@ -125,7 +125,6 @@ export async function getSidebarRepos(userId: string) {
       avatarUrl: true,
     },
     orderBy: { createdAt: "desc" },
-    take: 10,
   });
 }
 

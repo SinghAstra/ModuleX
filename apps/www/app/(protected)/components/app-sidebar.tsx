@@ -110,8 +110,7 @@ export function AppSidebar({ initialRepos }: AppSidebarProps) {
               </kbd>
             </button>
           </div>
-
-          <div className="flex-1 overflow-y-auto px-3 py-1 space-y-4">
+          <div className="flex-1 overflow-y-auto px-3 py-1 space-y-6 scrollbar-thin scrollbar-thumb-muted">
             <div className="space-y-1">
               {OVERVIEW_LINKS.map((link) => {
                 const isActive = pathname === link.url;
@@ -140,7 +139,7 @@ export function AppSidebar({ initialRepos }: AppSidebarProps) {
                   Recent
                 </h3>
                 <div className="space-y-1">
-                  {repos.slice(0, 5).map((repo) => (
+                  {repos.map((repo) => (
                     <Link
                       key={repo.id}
                       href={`/repo/${repo.id}`}
