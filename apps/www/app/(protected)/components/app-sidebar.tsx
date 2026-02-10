@@ -12,6 +12,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Sidebar, useSidebar } from "@/components/ui/sidebar";
+import { OVERVIEW_LINKS } from "@/config/navigation";
 import { siteConfig } from "@/config/site";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useQuery } from "@tanstack/react-query";
@@ -97,7 +98,7 @@ export function AppSidebar({ initialRepos }: AppSidebarProps) {
           <div className="py-1 px-3">
             <button
               onClick={() => setOpen(true)}
-              className="w-full flex items-center justify-between gap-2 px-3 py-2 text-sm text-muted-foreground bg-muted/30 hover:bg-muted/50 rounded-md transition-all duration-200 border border-border/50 cursor-pointer"
+              className="w-full flex items-center justify-between gap-2 px-2 py-1 text-sm text-muted-foreground bg-muted/30 hover:bg-muted/50 rounded-md transition-all duration-200 border border-border/50 cursor-pointer"
             >
               <div className="flex items-center gap-2">
                 <Search className="w-4 h-4" />
@@ -112,18 +113,25 @@ export function AppSidebar({ initialRepos }: AppSidebarProps) {
 
           <div className="flex-1 overflow-y-auto px-3 py-1 space-y-4">
             <div className="space-y-1">
-              <Link href="/dashboard" onClick={handleClick}>
-                <div
-                  className={`px-3 py-2 rounded flex items-center gap-2 transition-all duration-200 ${
-                    pathname === "/dashboard"
-                      ? "bg-muted/30 text-foreground"
-                      : "text-muted-foreground hover:bg-muted/30"
-                  }`}
-                >
-                  <Home className="w-4 h-4" />
-                  <span className="text-sm ">Dashboard</span>
-                </div>
-              </Link>
+              {OVERVIEW_LINKS.map((link) => {
+                const isActive = pathname === link.url;
+                return (
+                  <Link key={link.url} href={link.url} onClick={handleClick}>
+                    <div
+                      className={`p-2 rounded flex items-center gap-3 transition-all duration-200 ${
+                        isActive
+                          ? "bg-muted/40 text-foreground font-medium"
+                          : "text-muted-foreground hover:bg-muted/30"
+                      }`}
+                    >
+                      <link.icon
+                        className={`w-4 h-4 ${isActive ? "text-primary" : ""}`}
+                      />
+                      <span className="text-sm">{link.title}</span>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
 
             {repos.length > 0 && (
