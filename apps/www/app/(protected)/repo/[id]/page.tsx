@@ -1,6 +1,6 @@
-import { getRepoWithMetadata } from "@/actions/repo";
 import { notFound } from "next/navigation";
 import RepoClientPage from "./repo-client-page";
+import { getRepoWithMetadata } from "@/services/repo-service";
 
 interface RepoPageProps {
   params: Promise<{ id: string }>;

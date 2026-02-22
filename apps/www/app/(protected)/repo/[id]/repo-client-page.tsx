@@ -1,12 +1,11 @@
 "use client";
 
-import type { FullRepoMetadata } from "@/actions/repo";
-import { useRepoSocket } from "@/hooks/use-repo-socket";
-import { useQuery } from "@tanstack/react-query";
+import { useRepoDetail } from "@/hooks/queries/use-repo-detail";
+import { useRepoSocket } from "@/hooks/queries/use-repo-socket";
+import { FullRepoMetadata } from "@/services/repo-service";
 import { REPO_STATUS } from "@understand-x/shared";
 import { CodeExplorer } from "./components/code-explorer";
 import { RepoHeader } from "./components/repo-header";
-import { TerminalView } from "./components/terminal-view";
 
 interface RepoClientPageProps {
   repoId: string;
@@ -20,14 +19,7 @@ export default function RepoClientPage({
   audit,
 }: RepoClientPageProps) {
   useRepoSocket(repoId);
-
-  const { data: repo } = useQuery({
-    queryKey: ["repo", repoId],
-    initialData: initialData,
-    select: (data) => data as FullRepoMetadata["repo"],
-    queryFn: () => initialData,
-    staleTime: Infinity,
-  });
+  const { data: repo } = useRepoDetail(repoId, initialData);
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
