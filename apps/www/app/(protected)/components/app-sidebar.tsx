@@ -1,6 +1,5 @@
 "use client";
 
-import { SidebarRepo } from "@/actions/repo";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -14,33 +13,13 @@ import {
 import { Sidebar, useSidebar } from "@/components/ui/sidebar";
 import { OVERVIEW_LINKS } from "@/config/navigation";
 import { siteConfig } from "@/config/site";
+import { useRepos } from "@/hooks/queries/use-repo";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useQuery } from "@tanstack/react-query";
-import {
-  GitBranch,
-  Home,
-  LayoutGrid,
-  LucideIcon,
-  Plus,
-  Search,
-} from "lucide-react";
+import { SidebarRepo } from "@/services/repo-service";
+import { GitBranch, Plus, Search } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
-interface SidebarNavItem {
-  url: string;
-  title: string;
-  icon: LucideIcon;
-}
-
-const sidebarNav: SidebarNavItem[] = [
-  {
-    url: "/dashboard",
-    title: "Repositories",
-    icon: LayoutGrid,
-  },
-];
 
 interface AppSidebarProps {
   initialRepos: SidebarRepo[];
@@ -51,19 +30,14 @@ export function AppSidebar({ initialRepos }: AppSidebarProps) {
   const isMobile = useIsMobile();
   const pathname = usePathname();
   const router = useRouter();
-  const [open, setOpen] = useState(false);
-
-  const { data: repos } = useQuery<SidebarRepo[]>({
-    queryKey: ["recent-repos"],
-    initialData: initialRepos,
-    staleTime: Infinity,
-  });
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { data: repos } = useRepos(initialRepos);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        setOpen((open) => !open);
+        setIsSearchOpen((isSearchOpen) => !isSearchOpen);
       }
     };
 
@@ -73,7 +47,7 @@ export function AppSidebar({ initialRepos }: AppSidebarProps) {
 
   const handleNavigate = (url: string) => {
     router.push(url);
-    setOpen(false);
+    setIsSearchOpen(false);
     if (isMobile) {
       toggleSidebar();
     }
@@ -97,7 +71,7 @@ export function AppSidebar({ initialRepos }: AppSidebarProps) {
 
           <div className="py-1 px-3">
             <button
-              onClick={() => setOpen(true)}
+              onClick={() => setIsSearchOpen(true)}
               className="w-full flex items-center justify-between gap-2 px-2 py-1 text-sm text-muted-foreground bg-muted/30 hover:bg-muted/50 rounded-md transition-all duration-200 border border-border/50 cursor-pointer"
             >
               <div className="flex items-center gap-2">
@@ -110,7 +84,7 @@ export function AppSidebar({ initialRepos }: AppSidebarProps) {
               </kbd>
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto px-3 py-1 space-y-6 scrollbar-thin scrollbar-thumb-muted">
+          <div className="flex-1 flex-col flex overflow-y-auto px-3 py-1 space-y-6 scrollbar-thin scrollbar-thumb-muted">
             <div className="space-y-1">
               {OVERVIEW_LINKS.map((link) => {
                 const isActive = pathname === link.url;
@@ -162,7 +136,7 @@ export function AppSidebar({ initialRepos }: AppSidebarProps) {
             )}
 
             {repos.length === 0 && (
-              <div className="px-3 py-6 text-center">
+              <div className="px-3 flex-1 flex items-center justify-center ">
                 <p className="text-xs text-muted-foreground">
                   No repositories yet
                 </p>
@@ -172,10 +146,7 @@ export function AppSidebar({ initialRepos }: AppSidebarProps) {
 
           <div className="p-3">
             <Link href="/import" onClick={handleClick}>
-              <Button
-                size="sm"
-                className="w-full text-foreground bg-muted/20 hover:bg-muted/30 transition-all duration-300"
-              >
+              <Button size="sm" className="w-full transition-all duration-300">
                 <Plus className="w-4 h-4" />
                 <span>New Repository</span>
               </Button>
@@ -184,24 +155,28 @@ export function AppSidebar({ initialRepos }: AppSidebarProps) {
         </div>
       </Sidebar>
 
-      <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandDialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
         <CommandInput placeholder="Search repositories..." />
         <CommandList>
-          <CommandEmpty>No repositories found.</CommandEmpty>
-          <CommandGroup heading="Recent">
-            {repos.slice(0, 5).map((repo) => (
-              <CommandItem
-                key={repo.id}
-                value={repo.name}
-                onSelect={() => handleNavigate(`/repositories/${repo.id}`)}
-              >
-                <GitBranch className="mr-2 h-4 w-4" />
-                <span>{repo.name}</span>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-          <CommandGroup heading="Actions">
-            <CommandItem onSelect={() => handleNavigate("/import-repository")}>
+          {repos.length > 0 && (
+            <CommandGroup heading="Recent">
+              {repos.slice(0, 5).map((repo) => (
+                <CommandItem
+                  key={repo.id}
+                  value={repo.name}
+                  onSelect={() => handleNavigate(`/repositories/${repo.id}`)}
+                >
+                  <GitBranch className="mr-2 h-4 w-4" />
+                  <span>{repo.name}</span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          )}
+          <CommandGroup>
+            <CommandItem
+              onSelect={() => handleNavigate("/import-repository")}
+              className="cursor-pointer rounded-b-lg"
+            >
               <Plus className="mr-2 h-4 w-4" />
               <span>Import New Repository</span>
             </CommandItem>
