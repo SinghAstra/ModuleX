@@ -40,7 +40,7 @@ export function RepoCard({ repo }: any) {
 
       <CardFooter className="bg-muted/30 p-3">
         <Link
-          href={`/dashboard/repo/${repo.id}`}
+          href={`/repo/${repo.id}`}
           className="w-full flex items-center justify-center gap-2 text-sm font-medium text-primary group-hover:underline"
         >
           {isProcessing ? "View Progress" : "Explore Implementation"}
