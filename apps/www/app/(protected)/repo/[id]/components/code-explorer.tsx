@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { getFileDetails, getRepoTree } from "@/services/repo-service";
+import { getFileDetails, getRepoTree, TreeNode } from "@/services/repo-service";
 import { useQuery } from "@tanstack/react-query";
 import { Box, ChevronRight, Loader2, Search, Zap } from "lucide-react";
 import { useState } from "react";
@@ -10,7 +10,7 @@ import { FileTree } from "./file-tree";
 export function CodeExplorer({ repoId }: { repoId: string }) {
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
 
-  const { data: treeNodes, isLoading: isTreeLoading } = useQuery({
+  const { data: treeNodes, isLoading: isTreeLoading } = useQuery<TreeNode[]>({
     queryKey: ["repo-tree", repoId],
     queryFn: () => getRepoTree(repoId),
   });

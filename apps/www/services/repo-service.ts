@@ -81,11 +81,9 @@ export async function getRepoTree(repositoryId: string): Promise<TreeNode[]> {
   });
 
   directories.forEach((dir) => {
-    if (dir.parentId && treeMap[dir.parentId]) {
-      // For every treeMap[dir.parentId] children is empty array as how come Object is possibly 'undefined'.ts(2532)
-      // (property) parentId: string
-
-      treeMap[dir.parentId].children.push(treeMap[dir.id]);
+    const parentId = dir.parentId;
+    if (parentId && treeMap[parentId]) {
+      treeMap[parentId].children?.push(treeMap[dir.id]);
     } else {
       rootNodes.push(treeMap[dir.id]);
     }
@@ -99,8 +97,9 @@ export async function getRepoTree(repositoryId: string): Promise<TreeNode[]> {
       path: file.path,
     };
 
-    if (file.directoryId && treeMap[file.directoryId]) {
-      treeMap[file.directoryId].children?.push(fileNode);
+    const directoryId = file.directoryId;
+    if (directoryId && treeMap[directoryId]) {
+      treeMap[directoryId].children?.push(fileNode);
     } else {
       rootNodes.push(fileNode);
     }
