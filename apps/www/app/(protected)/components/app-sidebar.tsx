@@ -1,81 +1,188 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Sidebar, useSidebar } from "@/components/ui/sidebar";
+import { OVERVIEW_LINKS } from "@/config/navigation";
 import { siteConfig } from "@/config/site";
+import { useRepos } from "@/hooks/queries/use-repo";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { ROUTES } from "@/lib/routes";
-import { LayoutGrid, LucideIcon, PlusCircle } from "lucide-react";
+import { SidebarRepo } from "@/services/repo-service";
+import { GitBranch, Plus, Search } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-interface SidebarNavItem {
-  url: string;
-  title: string;
-  icon: LucideIcon;
+interface AppSidebarProps {
+  initialRepos: SidebarRepo[];
 }
 
-const sidebarNav: SidebarNavItem[] = [
-  {
-    url: "/dashboard",
-    title: "Repositories",
-    icon: LayoutGrid,
-  },
-];
-
-export function AppSidebar() {
+export function AppSidebar({ initialRepos }: AppSidebarProps) {
   const { toggleSidebar } = useSidebar();
   const isMobile = useIsMobile();
   const pathname = usePathname();
+  const router = useRouter();
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { data: repos } = useRepos(initialRepos);
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setIsSearchOpen((isSearchOpen) => !isSearchOpen);
+      }
+    };
+
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
+
+  const handleNavigate = (url: string) => {
+    router.push(url);
+    setIsSearchOpen(false);
+    if (isMobile) {
+      toggleSidebar();
+    }
+  };
 
   const handleClick = () => {
     if (isMobile) {
       toggleSidebar();
     }
   };
+
   return (
-    <Sidebar className="border-0! bg-background!">
-      <div className="bg-background">
-        <Link href="/dashboard" onClick={handleClick}>
-          <div className="flex items-center text-lg gap-2 p-2">
-            <h1>{siteConfig.name}</h1>
-          </div>
-        </Link>
-      </div>
-
-      <div className="flex-1 flex flex-col gap-1 overflow-y-auto p-2 bg-background">
-        {sidebarNav.map((item) => {
-          const isActive = pathname === item.url;
-
-          return (
-            <Link key={item.url} href={item.url} onClick={handleClick}>
-              <div
-                className={`px-3 py-1 flex items-center gap-2 transition-all duration-300 rounded ${
-                  isActive
-                    ? "bg-muted/40 text-foreground"
-                    : "text-muted-foreground hover:bg-muted/20"
-                }`}
-              >
-                <item.icon className="w-4 h-4 text-muted-foreground" />
-                <span className="text-truncate">{item.title}</span>
-              </div>
+    <>
+      <Sidebar className="border-none!">
+        <div className="flex flex-col h-full bg-background">
+          <div className="p-3">
+            <Link href="/dashboard" onClick={handleClick}>
+              <span className="text-lg">{siteConfig.name}</span>
             </Link>
-          );
-        })}
-      </div>
+          </div>
 
-      <div className="mt-auto p-2  space-y-1 bg-background">
-        <Link href={ROUTES.DASHBOARD.IMPORT_REPO} onClick={handleClick}>
-          <Button
-            size={"lg"}
-            variant={"outline"}
-            className="w-full bg-muted/30 hover:bg-muted/60 transition-all duration-300"
-          >
-            <PlusCircle className="w-4 h-4" />
-            <span>Import repository</span>
-          </Button>
-        </Link>
-      </div>
-    </Sidebar>
+          <div className="py-1 px-3">
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className="w-full flex items-center justify-between gap-2 px-2 py-1 text-sm text-muted-foreground bg-muted/30 hover:bg-muted/50 rounded-md transition-all duration-200 border border-border/50 cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <Search className="w-4 h-4" />
+                <span>Search repos...</span>
+              </div>
+              <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded bg-muted/50 text-muted-foreground border border-border/50">
+                <span className="text-xs">⌘</span>
+                <span>K</span>
+              </kbd>
+            </button>
+          </div>
+          <div className="flex-1 flex-col flex overflow-y-auto px-3 py-1 space-y-6 scrollbar-thin scrollbar-thumb-muted">
+            <div className="space-y-1">
+              {OVERVIEW_LINKS.map((link) => {
+                const isActive = pathname === link.url;
+                return (
+                  <Link key={link.url} href={link.url} onClick={handleClick}>
+                    <div
+                      className={`p-2 rounded flex items-center gap-3 transition-all duration-200 ${
+                        isActive
+                          ? "bg-muted/40 text-foreground font-medium"
+                          : "text-muted-foreground hover:bg-muted/30"
+                      }`}
+                    >
+                      <link.icon
+                        className={`w-4 h-4 ${isActive ? "text-primary" : ""}`}
+                      />
+                      <span className="text-sm">{link.title}</span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {repos.length > 0 && (
+              <div className="space-y-1">
+                <h3 className="px-3 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  Recent
+                </h3>
+                <div className="space-y-1">
+                  {repos.map((repo) => (
+                    <Link
+                      key={repo.id}
+                      href={`/repo/${repo.id}`}
+                      onClick={handleClick}
+                    >
+                      <div
+                        className={`px-3 py-2 rounded text-foreground/80 flex items-center gap-2 transition-all duration-200 truncate ${
+                          pathname === `/repo/${repo.id}`
+                            ? "bg-muted/30"
+                            : "hover:bg-muted/30"
+                        }`}
+                      >
+                        <GitBranch className="w-4 h-4 shrink-0" />
+                        <span className="text-sm truncate">{repo.name}</span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {repos.length === 0 && (
+              <div className="px-3 flex-1 flex items-center justify-center ">
+                <p className="text-xs text-muted-foreground">
+                  No repositories yet
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="p-3">
+            <Link href="/import" onClick={handleClick}>
+              <Button size="sm" className="w-full transition-all duration-300">
+                <Plus className="w-4 h-4" />
+                <span>New Repository</span>
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </Sidebar>
+
+      <CommandDialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
+        <CommandInput placeholder="Search repositories..." />
+        <CommandList>
+          {repos.length > 0 && (
+            <CommandGroup heading="Recent">
+              {repos.slice(0, 5).map((repo) => (
+                <CommandItem
+                  key={repo.id}
+                  value={repo.name}
+                  onSelect={() => handleNavigate(`/repositories/${repo.id}`)}
+                >
+                  <GitBranch className="mr-2 h-4 w-4" />
+                  <span>{repo.name}</span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          )}
+          <CommandGroup>
+            <CommandItem
+              onSelect={() => handleNavigate("/import-repository")}
+              className="cursor-pointer rounded-b-lg"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              <span>Import New Repository</span>
+            </CommandItem>
+          </CommandGroup>
+        </CommandList>
+      </CommandDialog>
+    </>
   );
 }

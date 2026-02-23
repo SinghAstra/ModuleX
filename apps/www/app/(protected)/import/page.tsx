@@ -46,7 +46,7 @@ function ImportRepoPage() {
       return data.data;
     },
     onSuccess: (data) => {
-      router.push(`/dashboard/repo/${data.repoId}/console`);
+      router.push(`/repo/${data.repoId}`);
     },
     onError: (error: any) => {
       const message = error.response?.data?.message || "Something went wrong";

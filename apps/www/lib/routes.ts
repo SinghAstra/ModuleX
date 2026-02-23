@@ -8,6 +8,6 @@ export const ROUTES = {
   },
   DASHBOARD: {
     HOME: "/dashboard",
-    IMPORT_REPO: "/dashboard/import",
+    IMPORT_REPO: "/import",
   },
 } as const;
