@@ -1,7 +1,7 @@
 "use client";
 
-import { getFileDetails, getRepoTree } from "@/actions/repo";
 import { Badge } from "@/components/ui/badge";
+import { getFileDetails, getRepoTree } from "@/services/repo-service";
 import { useQuery } from "@tanstack/react-query";
 import { Box, ChevronRight, Loader2, Search, Zap } from "lucide-react";
 import { useState } from "react";

@@ -24,7 +24,6 @@ export default function RepoClientPage({
   return (
     <div className="flex flex-col flex-1 overflow-hidden">
       <RepoHeader repo={repo} audit={audit} />
-
       <main className="flex-1 overflow-hidden ">
         {repo.status === REPO_STATUS.COMPLETED ? (
           <CodeExplorer repoId={repoId} />

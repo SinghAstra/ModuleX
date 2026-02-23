@@ -1,6 +1,6 @@
 "use client";
-import { TreeNode } from "@/actions/repo";
 import { cn } from "@/lib/utils";
+import { TreeNode } from "@/services/repo-service";
 import {
   ChevronDown,
   ChevronRight,
