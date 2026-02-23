@@ -7,18 +7,16 @@ import {
   Folder,
   FolderOpen,
 } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import FileTree from "./file-tree";
 
-const TreeItem = ({
-  node,
-  onFileSelect,
-  selectedFileId,
-}: {
+interface TreeItemProps {
   node: TreeNode;
   onFileSelect: any;
   selectedFileId?: string;
-}) => {
+}
+
+const TreeItem = ({ node, onFileSelect, selectedFileId }: TreeItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const isDirectory = node.type === "directory";
   const isSelected = selectedFileId === node.id;
@@ -62,15 +60,15 @@ const TreeItem = ({
     <div
       onClick={() => onFileSelect(node.id)}
       className={cn(
-        "flex items-center gap-2 px-2 py-1 pl-6 rounded-md cursor-pointer transition-all",
+        "flex items-center gap-2 px-2 py-1 border-l-2 border-transparent rounded-sm cursor-pointer transition-all duration-300",
         isSelected
-          ? "bg-primary/10 text-primary border-r-2 border-primary"
-          : "hover:bg-secondary/50 text-muted-foreground hover:text-foreground"
+          ? "bg-muted/50 text-primary border-primary"
+          : "hover:bg-muted/50 text-muted-foreground hover:text-foreground"
       )}
     >
       <FileCode
         className={cn(
-          "w-4 h-4",
+          "w-4 h-4 shrink-0",
           isSelected ? "text-primary" : "text-blue-400/70"
         )}
       />
