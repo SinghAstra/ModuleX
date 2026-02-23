@@ -26,7 +26,7 @@ const TreeItem = ({ node, onFileSelect, selectedFileId }: TreeItemProps) => {
       <div>
         <div
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 px-2 py-1 hover:bg-secondary/50 rounded-md cursor-pointer group transition-colors"
+          className="flex items-center gap-2 px-2 py-1 hover:bg-muted/50 rounded-sm cursor-pointer group transition-all duration-300"
         >
           <span className="text-muted-foreground group-hover:text-foreground">
             {isOpen ? (
@@ -44,7 +44,7 @@ const TreeItem = ({ node, onFileSelect, selectedFileId }: TreeItemProps) => {
         </div>
 
         {isOpen && node.children && (
-          <div className="ml-4 border-l border-border/50 pl-2 mt-1">
+          <div className="ml-2 border-l border-border/50 pl-1 mt-1">
             <FileTree
               nodes={node.children}
               onFileSelect={onFileSelect}

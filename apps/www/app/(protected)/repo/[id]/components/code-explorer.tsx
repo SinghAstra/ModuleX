@@ -24,17 +24,12 @@ export function CodeExplorer({ repoId }: { repoId: string }) {
   return (
     <div className="grid grid-cols-12 h-full">
       <div className="col-span-3 overflow-y-auto border-r h-full p-4">
-        {isTreeLoading ? (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Loader2 className="w-4 h-4 animate-spin" /> Building tree...
-          </div>
-        ) : (
-          <FileTree
-            nodes={treeNodes || []}
-            onFileSelect={setSelectedFileId}
-            selectedFileId={selectedFileId || undefined}
-          />
-        )}
+        <FileTree
+          nodes={treeNodes || []}
+          onFileSelect={setSelectedFileId}
+          selectedFileId={selectedFileId || undefined}
+          isLoading={isTreeLoading}
+        />
       </div>
 
       <section className="col-span-9 overflow-y-auto">
