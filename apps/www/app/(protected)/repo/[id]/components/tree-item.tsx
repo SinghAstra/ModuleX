@@ -44,11 +44,12 @@ const TreeItem = ({ node, onFileSelect, selectedFileId }: TreeItemProps) => {
         </div>
 
         {isOpen && node.children && (
-          <div className="ml-2 border-l border-border/50 pl-1 mt-1">
+          <div className="ml-2 border-l border-border/50 mt-1">
             <FileTree
               nodes={node.children}
               onFileSelect={onFileSelect}
               selectedFileId={selectedFileId}
+              isLoading={false}
             />
           </div>
         )}

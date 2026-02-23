@@ -34,7 +34,7 @@ export function CodeExplorer({ repoId }: { repoId: string }) {
 
       <section className="col-span-9 overflow-y-auto">
         {selectedFileId ? (
-          <div className="max-w-5xl mx-auto p-8 space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="w-full p-2 space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
             <div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
                 <span>Repository</span> /{" "}

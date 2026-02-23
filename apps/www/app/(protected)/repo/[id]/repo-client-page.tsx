@@ -1,10 +1,14 @@
 "use client";
 
+import { repoKeys } from "@/hooks/queries/query-keys";
 import { useRepoDetail } from "@/hooks/queries/use-repo-detail";
 import { useRepoSocket } from "@/hooks/queries/use-repo-socket";
 import { FullRepoMetadata } from "@/services/repo-service";
+import { useQueryClient } from "@tanstack/react-query";
+import { Log } from "@understand-x/database";
 import { REPO_STATUS } from "@understand-x/shared";
 import { CodeExplorer } from "./components/code-explorer";
+import { LogsView } from "./components/logs-view";
 import { RepoHeader } from "./components/repo-header";
 
 interface RepoClientPageProps {
@@ -20,17 +24,23 @@ export default function RepoClientPage({
 }: RepoClientPageProps) {
   useRepoSocket(repoId);
   const { data: repo } = useRepoDetail(repoId, initialData);
+  const queryClient = useQueryClient();
+
+  const logs: Log[] = queryClient.getQueryData(repoKeys.logs(repoId)) || [];
+  const isProcessing =
+    repo?.status === REPO_STATUS.PROCESSING ||
+    repo?.status === REPO_STATUS.QUEUED;
+
+  console.log("logs is ", logs);
 
   return (
     <div className="flex flex-col flex-1 overflow-hidden">
       <RepoHeader repo={repo} audit={audit} />
       <main className="flex-1 overflow-hidden ">
-        {repo.status === REPO_STATUS.COMPLETED ? (
+        {repo.status !== REPO_STATUS.COMPLETED ? (
           <CodeExplorer repoId={repoId} />
         ) : (
-          // <h1>Code Explorer</h1>
-          <h1>Terminal View</h1>
-          // <TerminalView logs={repo.logs} />
+          <LogsView logs={logs} isLoading={isProcessing} />
         )}
       </main>
     </div>
