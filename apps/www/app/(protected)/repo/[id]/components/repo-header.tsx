@@ -1,6 +1,5 @@
-import { FullRepoMetadata } from "@/actions/repo";
-import { Badge } from "@/components/ui/badge";
-import { FaGithub } from "react-icons/fa";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { FullRepoMetadata } from "@/services/repo-service";
 
 interface RepoHeaderProps {
   repo: FullRepoMetadata["repo"];
@@ -8,43 +7,52 @@ interface RepoHeaderProps {
 }
 
 export function RepoHeader({ repo, audit }: RepoHeaderProps) {
-  const statusColors = {
-    QUEUED: "bg-slate-500",
-    PROCESSING: "bg-amber-500 animate-pulse",
-    COMPLETED: "bg-emerald-500",
-    FAILED: "bg-rose-500",
-  };
+  const healthPercentage = audit.score;
+  const isHealthy = healthPercentage >= 80;
+  const isWarning = healthPercentage >= 50 && healthPercentage < 80;
 
   return (
-    <header className="border-b bg-background p-4 flex items-center justify-between">
-      <div className="flex items-center gap-4">
-        <h1 className="text-xl font-bold flex items-center gap-2">
-          <FaGithub className="w-5 h-5" />
-          {repo.name}
-        </h1>
-        <Badge
-          className={statusColors[repo.status as keyof typeof statusColors]}
-        >
-          {repo.status}
-        </Badge>
-      </div>
+    <header className="border-b bg-background/50 backdrop-blur-sm px-4 py-3 flex items-center justify-between">
+      <a
+        href={repo.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Open repository on GitHub"
+        title="Open on GitHub"
+      >
+        <div className="flex items-center gap-3 min-w-0">
+          <Avatar>
+            <AvatarImage src={repo.avatarUrl} alt={repo.name} />
+          </Avatar>
 
-      <div className="flex items-center gap-6">
-        <div className="flex flex-col items-end">
-          <span className="text-xs text-muted-foreground uppercase font-semibold">
-            Nervous System Health
-          </span>
+          <h1 className="text-lg font-semibold truncate text-foreground">
+            {repo.name}
+          </h1>
+        </div>
+      </a>
+
+      <div className="flex items-center gap-3 shrink-0">
+        <div className="flex flex-col items-end gap-1">
           <div className="flex items-center gap-2">
-            <div className="h-2 w-24 bg-secondary rounded-full overflow-hidden">
+            <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
               <div
-                className="h-full bg-emerald-500 transition-all"
-                style={{ width: `${audit.score}%` }}
+                className={`h-full transition-all ${
+                  isHealthy
+                    ? "bg-emerald-500/80"
+                    : isWarning
+                    ? "bg-amber-500/80"
+                    : "bg-rose-500/80"
+                }`}
+                style={{ width: `${healthPercentage}%` }}
               />
             </div>
-            <span className="text-sm font-mono">
+            <span className="text-xs font-mono text-muted-foreground/70 min-w-fit">
               {audit.resolved}/{audit.total}
             </span>
           </div>
+          <span className="text-xs text-muted-foreground/50">
+            {healthPercentage.toFixed(0)}%
+          </span>
         </div>
       </div>
     </header>

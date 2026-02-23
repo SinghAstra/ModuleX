@@ -22,7 +22,7 @@ export function FileTree({
   selectedFileId,
 }: FileTreeProps) {
   return (
-    <div className="space-y-1 select-none">
+    <div className="flex flex-col gap-1">
       {nodes.map((node) => (
         <TreeItem
           key={node.id}

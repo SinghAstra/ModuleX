@@ -22,31 +22,21 @@ export function CodeExplorer({ repoId }: { repoId: string }) {
   });
 
   return (
-    <div className="grid grid-cols-12 h-full bg-background">
-      {/* LEFT: Skeleton (Directories & Files) */}
-      <aside className="col-span-3 border-r bg-muted/20 flex flex-col overflow-hidden">
-        <div className="p-4 border-b bg-muted/10">
-          <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-            Skeleton Explorer
-          </h3>
-        </div>
+    <div className="grid grid-cols-12 h-full">
+      <div className="col-span-3 overflow-y-auto border-r h-full p-4">
+        {isTreeLoading ? (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Loader2 className="w-4 h-4 animate-spin" /> Building tree...
+          </div>
+        ) : (
+          <FileTree
+            nodes={treeNodes || []}
+            onFileSelect={setSelectedFileId}
+            selectedFileId={selectedFileId || undefined}
+          />
+        )}
+      </div>
 
-        <div className="flex-1 overflow-y-auto p-4 scrollbar-thin">
-          {isTreeLoading ? (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="w-4 h-4 animate-spin" /> Building tree...
-            </div>
-          ) : (
-            <FileTree
-              nodes={treeNodes || []}
-              onFileSelect={setSelectedFileId}
-              selectedFileId={selectedFileId || undefined}
-            />
-          )}
-        </div>
-      </aside>
-
-      {/* CENTER: Metadata (Symbols & Implementation) */}
       <section className="col-span-9 overflow-y-auto">
         {selectedFileId ? (
           <div className="max-w-5xl mx-auto p-8 space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">

@@ -23,10 +23,10 @@ const ProtectedLayout = async ({ children }: ProtectedLayoutProps) => {
   return (
     <div className="flex h-dvh overflow-hidden w-full">
       <AppSidebar initialRepos={initialRepos} />
-      <div className="flex flex-col w-full h-full overflow-hidden">
+      <div className="flex flex-col flex-1 overflow-hidden">
         <ProtectedNavbar user={session.user} />
-        <div className="w-full h-full overflow-hidden p-2 pt-0 lg:pl-0">
-          <div className="rounded bg-muted/20 w-full h-full overflow-hidden border">
+        <div className="flex-1 p-2 pt-0 lg:pl-0 flex overflow-hidden">
+          <div className="rounded flex-1 flex w-full bg-muted/20 overflow-hidden border">
             {children}
           </div>
         </div>
