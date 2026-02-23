@@ -136,7 +136,7 @@ export function CodeExplorer({ repoId }: { repoId: string }) {
               <Search className="w-12 h-12" />
             </div>
             <p className="text-sm font-medium">
-              Select a file from the skeleton to inspect its synapses.
+              Select a file in order to get started.
             </p>
           </div>
         )}
