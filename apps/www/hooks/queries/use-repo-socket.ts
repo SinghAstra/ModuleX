@@ -13,24 +13,28 @@ export const useRepoSocket = (repoId: string) => {
   useEffect(() => {
     const socket = io(env.NEXT_PUBLIC_API_URL, {
       query: { repoId },
+      transports: ["websocket"],
     });
 
     socket.on(SOCKET_EVENTS.LOG_UPDATED, (newLog: Log) => {
-      // 1. Update the Logs (Terminal View)
       queryClient.setQueryData(
         repoKeys.logs(repoId),
         (oldLogs: Log[] | undefined) => {
-          return [newLog, ...(oldLogs || [])].slice(0, 50);
+          const currentLogs = oldLogs || [];
+
+          if (currentLogs.some((log) => log.id === newLog.id)) {
+            return currentLogs;
+          }
+
+          return [newLog, ...currentLogs];
         }
       );
 
-      // 2. Update the Specific Repo Status (Detail View)
       queryClient.setQueryData(repoKeys.detail(repoId), (oldRepo: any) => {
         if (!oldRepo) return oldRepo;
         return { ...oldRepo, status: newLog.status };
       });
 
-      // 3. Update the Sidebar List
       queryClient.setQueryData(
         repoKeys.lists(),
         (oldRepos: SidebarRepo[] | undefined) => {
@@ -43,6 +47,7 @@ export const useRepoSocket = (repoId: string) => {
     });
 
     return () => {
+      socket.off(SOCKET_EVENTS.LOG_UPDATED);
       socket.disconnect();
     };
   }, [repoId, queryClient]);
