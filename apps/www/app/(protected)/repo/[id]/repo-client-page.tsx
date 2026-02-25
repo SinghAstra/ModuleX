@@ -1,7 +1,7 @@
 "use client";
 
 import { useRepoDetail } from "@/hooks/queries/use-repo-detail";
-import { useRepoLogs } from "@/hooks/queries/use-repo-logs"; // New Hook
+import { useRepoLogs } from "@/hooks/queries/use-repo-logs";
 import { useRepoSocket } from "@/hooks/queries/use-repo-socket";
 import { FullRepoMetadata } from "@/services/repo-service";
 import { Log } from "@understand-x/database";
@@ -35,7 +35,7 @@ export default function RepoClientPage({
     <div className="flex flex-col flex-1 overflow-hidden">
       <RepoHeader repo={repo} audit={audit} />
 
-      <main className="flex-1 overflow-hidden">
+      <main className="flex-1 overflow-hidden ">
         {repo.status !== REPO_STATUS.COMPLETED ? (
           <CodeExplorer repoId={repoId} />
         ) : (
