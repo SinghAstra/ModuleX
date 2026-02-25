@@ -1,3 +1,5 @@
+"use server";
+
 import { logError } from "@/lib/log-error";
 import { prisma } from "@understand-x/database";
 

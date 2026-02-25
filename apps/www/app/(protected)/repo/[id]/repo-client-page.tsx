@@ -1,10 +1,9 @@
 "use client";
 
-import { repoKeys } from "@/hooks/queries/query-keys";
 import { useRepoDetail } from "@/hooks/queries/use-repo-detail";
+import { useRepoLogs } from "@/hooks/queries/use-repo-logs"; // New Hook
 import { useRepoSocket } from "@/hooks/queries/use-repo-socket";
 import { FullRepoMetadata } from "@/services/repo-service";
-import { useQueryClient } from "@tanstack/react-query";
 import { Log } from "@understand-x/database";
 import { REPO_STATUS } from "@understand-x/shared";
 import { CodeExplorer } from "./components/code-explorer";
@@ -15,28 +14,28 @@ interface RepoClientPageProps {
   repoId: string;
   initialData: FullRepoMetadata["repo"];
   audit: FullRepoMetadata["audit"];
+  initialLogs: Log[];
 }
 
 export default function RepoClientPage({
   repoId,
   initialData,
   audit,
+  initialLogs,
 }: RepoClientPageProps) {
   useRepoSocket(repoId);
   const { data: repo } = useRepoDetail(repoId, initialData);
-  const queryClient = useQueryClient();
+  const { data: logs = [] } = useRepoLogs(repoId, initialLogs);
 
-  const logs: Log[] = queryClient.getQueryData(repoKeys.logs(repoId)) || [];
   const isProcessing =
     repo?.status === REPO_STATUS.PROCESSING ||
     repo?.status === REPO_STATUS.QUEUED;
 
-  console.log("logs is ", logs);
-
   return (
     <div className="flex flex-col flex-1 overflow-hidden">
       <RepoHeader repo={repo} audit={audit} />
-      <main className="flex-1 overflow-hidden ">
+
+      <main className="flex-1 overflow-hidden">
         {repo.status !== REPO_STATUS.COMPLETED ? (
           <CodeExplorer repoId={repoId} />
         ) : (
