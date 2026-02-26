@@ -7,7 +7,6 @@ export async function getRepoLogs(repoId: string) {
   try {
     const logs = await prisma.log.findMany({
       where: { repositoryId: repoId },
-      orderBy: { createdAt: "desc" },
     });
     return logs;
   } catch (error) {

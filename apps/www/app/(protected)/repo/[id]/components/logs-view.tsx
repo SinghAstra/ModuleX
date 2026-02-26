@@ -6,43 +6,15 @@ import { getRelativeTime } from "@/lib/utils/date";
 import type { Log } from "@understand-x/database";
 import { REPO_STATUS } from "@understand-x/shared";
 import { useEffect, useRef } from "react";
+import LoadingDots from "./loading-dots";
+import LogItem from "./log-item";
 
 interface LogsViewProps {
   logs?: Log[];
   isLoading?: boolean;
 }
 
-const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
-  [REPO_STATUS.QUEUED]: {
-    bg: "bg-muted/50",
-    text: "text-muted-foreground",
-  },
-  [REPO_STATUS.PROCESSING]: {
-    bg: "bg-primary/2",
-    text: "text-primary",
-  },
-  [REPO_STATUS.COMPLETED]: {
-    bg: "bg-green-500/10",
-    text: "text-green-500",
-  },
-  [REPO_STATUS.FAILED]: {
-    bg: "bg-destructive/10",
-    text: "text-destructive",
-  },
-};
-
-export function LogsView({ logs = [], isLoading = false }: LogsViewProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const logsEndRef = useRef<HTMLDivElement>(null);
-
-  // Auto-scroll to bottom when new logs arrive
-  useEffect(() => {
-    logsEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [logs]);
-
-  const colors = (status: string) =>
-    STATUS_COLORS[status] || STATUS_COLORS[REPO_STATUS.QUEUED];
-
+function LogsView({ logs = [], isLoading = false }: LogsViewProps) {
   return (
     <div className="flex flex-col flex-1 overflow-y-auto bg-background  h-full">
       <div className="p-4 space-y-2 font-mono text-sm">
@@ -52,47 +24,15 @@ export function LogsView({ logs = [], isLoading = false }: LogsViewProps) {
           </div>
         ) : (
           <>
-            {logs.map((log) => {
-              const { bg, text } = colors(log.status);
-              return (
-                <div
-                  key={log.id}
-                  className={`flex items-start gap-3 px-3 py-2 rounded border border-transparent transition-colors hover:bg-muted/30 ${bg}`}
-                >
-                  <Badge
-                    variant="secondary"
-                    className={`shrink-0 ${text} border-0 font-semibold uppercase text-xs tracking-wider mt-0.5`}
-                  >
-                    {log.status}
-                  </Badge>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-foreground/90">
-                      {log.message} something random
-                      {log.message} something random
-                      {log.message} something random
-                      {log.message} something random
-                    </p>
-                  </div>
-                  <span className="shrink-0 text-muted-foreground/60 text-xs whitespace-nowrap">
-                    {getRelativeTime(log.createdAt)}
-                  </span>
-                </div>
-              );
-            })}
-            {isLoading && (
-              <div className="flex items-center gap-2 px-3 py-2 text-muted-foreground/70">
-                <div className="flex gap-1">
-                  <div className="w-1.5 h-1.5 bg-primary/70 rounded-full animate-pulse" />
-                  <div className="w-1.5 h-1.5 bg-primary/50 rounded-full animate-pulse animation-delay-100" />
-                  <div className="w-1.5 h-1.5 bg-primary/30 rounded-full animate-pulse animation-delay-200" />
-                </div>
-                <span className="text-xs">Processing...</span>
-              </div>
-            )}
-            <div ref={logsEndRef} />
+            {logs.map((log) => (
+              <LogItem key={log.id} log={log} />
+            ))}
+            {isLoading && <LoadingDots />}
           </>
         )}
       </div>
     </div>
   );
 }
+
+export default LogsView;
