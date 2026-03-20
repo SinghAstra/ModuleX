@@ -1,18 +1,24 @@
-import { ApiSuccessResponse } from "@understand-x/shared/src/schemas/api";
+import { ApiResponse } from "@repo/common";
 import { Response } from "express";
 
-export const sendSuccess = <T>(
-  res: Response,
-  data: T,
-  message: string = "Success",
-  statusCode: number = 200
-) => {
-  const response: ApiSuccessResponse<T> = {
+export const sendResponse = <T>(res: Response, data: T, status = 200) => {
+  const body: ApiResponse<T> = {
     success: true,
-    statusCode,
-    message,
     data,
   };
+  return res.status(status).json(body);
+};
 
-  return res.status(statusCode).json(response);
+export const sendError = (
+  res: Response,
+  message: string,
+  status = 500,
+  code?: string
+) => {
+  const body: ApiResponse<null> = {
+    success: false,
+    error: message,
+    code,
+  };
+  return res.status(status).json(body);
 };

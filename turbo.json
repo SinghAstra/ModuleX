@@ -1,0 +1,45 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env*", "pnpm-lock.yaml"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build", "db:generate"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
+      "env": [
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "NEXT_AUTH_SECRET",
+        "NEXT_AUTH_URL",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "GMAIL_USER",
+        "GMAIL_APP_PASSWORD",
+        "API_URL",
+        "FRONTEND_URL"
+      ]
+    },
+    "db:generate": {
+      "cache": false,
+      "outputs": ["generated/**", "dist/**"],
+      "env": ["DATABASE_URL"]
+    },
+    "db:push": {
+      "cache": false
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "start": {
+      "cache": false,
+      "dependsOn": ["^build"]
+    },
+    "lint": {
+      "outputs": ["**/*.lint"]
+    },
+    "type-check": {
+      "dependsOn": ["^build"],
+      "outputs": ["**/*.tsbuildinfo"]
+    }
+  }
+}

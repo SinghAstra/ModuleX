@@ -1,36 +1,39 @@
-# Dependency directories
-node_modules/
-**/node_modules/
-jspm_packages/
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-ignore/
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+ignore
 
-# Build 
-/apps/www/.next/
-/apps/www/out/
-/apps/api/dist/
-/apps/api/build/
-/packages/*/dist/
-/packages/*/*.tsbuildinfo
+# Local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Testing
+coverage
+
+# Turbo
+.turbo
+
+# Vercel
 .vercel
 
+# Build Outputs
+.next/
+out/
+build
+dist
 
-# Logs
-*.log
+
+# Debug
 npm-debug.log*
 yarn-debug.log*
-
-# Environment variables (Crucial)
-.env
-.env.*
-!.env.example
-
-**/tmp/
-# OS Metadata
-.DS_Store
-Thumbs.db
+yarn-error.log*
 
 # Misc
-**/coverage/
-next-env.d.ts
-.turbo
+.DS_Store
+*.pem
