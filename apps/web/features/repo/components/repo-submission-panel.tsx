@@ -32,7 +32,7 @@ export function RepoSubmissionPanel() {
         router.push(`/repo/${data.repositoryId}`);
         return data.isDuplicate
           ? "Repository already exists. Loading workspace..."
-          : "Repository linked! ReadmeX pipeline started.";
+          : "Repository linked! ModuleX pipeline started.";
       },
       error: (err: Error) => err.message,
     });
@@ -41,11 +41,11 @@ export function RepoSubmissionPanel() {
   return (
     <div className="w-full max-w-3xl mx-auto flex flex-col items-center justify-center text-center px-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-2">
-        Generate a perfect README with AI
+        Visualize your codebase architecture
       </h1>
       <p className="text-sm md:text-base text-muted-foreground mb-8">
-        Paste your GitHub link to instantly map your code architecture and write
-        a comprehensive master document.
+        Paste your GitHub link to instantly explore your project&apos;s modules
+        and file structure.
       </p>
 
       <form
@@ -75,7 +75,7 @@ export function RepoSubmissionPanel() {
                 </>
               ) : (
                 <>
-                  Generate
+                  Analyze
                   <CornerDownLeft className="hidden sm:inline size-3 text-primary-foreground/80" />
                 </>
               )}
