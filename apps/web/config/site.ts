@@ -1,15 +1,15 @@
 import { SiteConfig } from "@/types/site";
 
 export const siteConfig: SiteConfig = {
-  name: "ReadmeX",
+  name: "ModuleX",
   description:
-    "Instantly generate production-ready READMEs and high-level architectural documentation for any GitHub repository using AI.",
-  url: "https://readmex.vercel.app",
+    "Instantly visualize project modules, file structures, and high-level architectural summaries for any GitHub repository using AI.",
+  url: "https://modulex.vercel.app",
   keywords: [
-    "ReadmeX",
-    "Automated README",
-    "AI Documentation",
-    "Architecture Mapping",
+    "ModuleX",
+    "Codebase Visualization",
+    "AI Architecture Mapping",
+    "Module Summaries",
     "GitHub Repository Analyzer",
     "Codebase Documentation",
     "Developer Tools",
@@ -20,6 +20,6 @@ export const siteConfig: SiteConfig = {
   links: {
     twitter: "https://x.com/XSinghAstra",
     github: "https://github.com/SinghAstra",
-    githubRepo: "https://github.com/SinghAstra/ReadmeX",
+    githubRepo: "https://github.com/SinghAstra/ModuleX",
   },
 };
