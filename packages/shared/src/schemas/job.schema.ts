@@ -29,7 +29,7 @@ export const fileSummarizationJobDataSchema = z.object({
   runId: z.number().int().nonnegative(),
 });
 
-export const readmeGenerationJobDataSchema = z.object({
+export const moduleGenerationJobDataSchema = z.object({
   jobId: z.uuid(),
   repositoryId: z.string().uuid(),
 });
@@ -39,6 +39,6 @@ export type RepoIngestionJobData = z.infer<typeof repoIngestionJobDataSchema>;
 export type FileSummarizationJobData = z.infer<
   typeof fileSummarizationJobDataSchema
 >;
-export type ReadmeGenerationJobData = z.infer<
-  typeof readmeGenerationJobDataSchema
+export type ModuleGenerationJobData = z.infer<
+  typeof moduleGenerationJobDataSchema
 >;
