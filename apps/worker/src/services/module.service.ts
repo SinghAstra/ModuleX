@@ -6,13 +6,13 @@ import {
   logError,
   REPOSITORY_STATUS,
 } from "@repo/shared";
-import { readmeGenerationQueue, trackProgress } from "@repo/shared/server";
+import { moduleGenerationQueue, trackProgress } from "@repo/shared/server";
 import { MODEL_CONFIG } from "../ai/model-config";
 import { executeAIRequest } from "../ai/request-manager";
 import { SYSTEM_PROMPT } from "../prompt";
 import { chunkTreeIntoBuckets, FileNode } from "../utils/tree-chunker";
 
-export const readmeService = {
+export const moduleService = {
   async prepareBuckets(repositoryId: string) {
     const dbFiles = await prisma.repositoryFile.findMany({
       where: {
@@ -35,40 +35,34 @@ export const readmeService = {
       };
     });
 
-    const buckets = chunkTreeIntoBuckets(mappedFiles, {
+    return chunkTreeIntoBuckets(mappedFiles, {
       minTokens: MODEL_CONFIG.minInputTokens,
       maxTokens: MODEL_CONFIG.maxInputTokens,
     });
-
-    return buckets;
   },
 
-  async triggerReadmeGeneration(repositoryId: string, jobId: string) {
-    await readmeGenerationQueue.add(JOB_NAMES.GENERATE_README, {
+  async triggerModuleGeneration(repositoryId: string, jobId: string) {
+    await moduleGenerationQueue.add(JOB_NAMES.GENERATE_MODULES, {
       repositoryId,
       jobId,
     });
   },
 
-  async processReadmeGeneration(repositoryId: string, jobId: string) {
+  async processModuleGeneration(repositoryId: string, jobId: string) {
     try {
       await prisma.moduleSummary.deleteMany({
         where: { repositoryId: repositoryId },
       });
 
-      const repo = await prisma.repository.findUnique({
-        where: { id: repositoryId },
-        select: { name: true },
-      });
-
-      const buckets = await readmeService.prepareBuckets(repositoryId);
+      const buckets = await moduleService.prepareBuckets(repositoryId);
       let runId = 0;
 
+      // 1. Initial State Message
       await trackProgress({
         jobId,
         repositoryId,
         status: JOB_STATUS.RUNNING,
-        message: `Grouping your project files... (${buckets.length} folders found)`,
+        message: "Grouping project files...",
       });
 
       for (const bucket of buckets) {
@@ -104,51 +98,18 @@ export const readmeService = {
         });
         runId++;
 
+        // 2. Loop Iteration Message
         await trackProgress({
           jobId,
           repositoryId,
           status: JOB_STATUS.RUNNING,
-          message: `Reading folder: ${bucket.path} (${runId}/${buckets.length})`,
+          message: `Analyzing folder: ${bucket.path} (${runId}/${buckets.length})`,
         });
       }
-
-      const moduleSummaries = await prisma.moduleSummary.findMany({
-        where: { repositoryId },
-        orderBy: { path: "asc" },
-      });
-
-      const finalPayload = moduleSummaries
-        .map((ms) => `### ${ms.path}\n${ms.summary}`)
-        .join("\n\n");
-
-      await trackProgress({
-        jobId,
-        repositoryId,
-        status: JOB_STATUS.RUNNING,
-        message: "Putting it all together into your final README...",
-      });
-
-      const aiResponse = await executeAIRequest(runId, {
-        model: MODEL_CONFIG.activeModel,
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT.MASTER_README },
-          {
-            role: "user",
-            content: `Project Name: ${
-              repo?.name || "My Project"
-            }\n\n${finalPayload}`,
-          },
-        ],
-      });
-
-      const finalReadmeText =
-        aiResponse?.choices[0]?.message?.content?.trim() ||
-        "Failed to generate README.";
 
       await prisma.repository.update({
         where: { id: repositoryId },
         data: {
-          readme: finalReadmeText,
           status: REPOSITORY_STATUS.COMPLETED,
         },
       });
@@ -161,20 +122,22 @@ export const readmeService = {
         },
       });
 
+      // 3. Success Message
       await trackProgress({
         jobId,
         repositoryId,
         status: JOB_STATUS.COMPLETED,
-        message: "All done! Your README is ready.",
+        message: "Analysis complete! Loading workspace...",
       });
     } catch (error) {
       logError(error);
 
+      // 4. Error Message
       await trackProgress({
         jobId,
         repositoryId,
         status: JOB_STATUS.FAILED,
-        message: "Oops! Something went wrong while writing the README.",
+        message: "Process failed. Please try again.",
       });
 
       await prisma.job.update({

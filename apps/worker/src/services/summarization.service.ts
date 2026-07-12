@@ -8,12 +8,9 @@ import { executeAIRequest } from "../ai/request-manager.js";
 import { SYSTEM_PROMPT } from "../prompt.js";
 import { classifyFile } from "../utils/file-classifier.js";
 import { getWorkspacePath } from "../utils/workspace.js";
-import { readmeService } from "./readme.service.js";
+import { moduleService } from "./module.service.js";
 
 export const summarizationService = {
-  /**
-   * Core entry point for processing background file summaries.
-   */
   async processFileSummary(
     fileId: string,
     repositoryId: string,
@@ -97,9 +94,6 @@ export const summarizationService = {
   },
 };
 
-/**
- * Directly hits the AI manager using standard payloads
- */
 async function generateSummaryDirectly(
   runId: number,
   relativePath: string,
@@ -120,9 +114,6 @@ async function generateSummaryDirectly(
   );
 }
 
-/**
- * Cap-Constrained Map-Reduce Engine: Limits maximum token consumption by evaluating up to 2 segments.
- */
 async function generateChunkedSummary(
   runId: number,
   relativePath: string,
@@ -196,9 +187,6 @@ async function generateChunkedSummary(
   return finalSummary;
 }
 
-/**
- * Monitors and logs progress metrics to the database and telemetry
- */
 async function updateGlobalProgress(
   repositoryId: string,
   jobId: string,
@@ -226,7 +214,7 @@ async function updateGlobalProgress(
       message: "Summarization complete! Generating final README...",
     });
 
-    await readmeService.triggerReadmeGeneration(repositoryId, jobId);
+    await moduleService.triggerModuleGeneration(repositoryId, jobId);
 
     try {
       await fs.rm(diskPath, { recursive: true, force: true });

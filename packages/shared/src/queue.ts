@@ -3,7 +3,7 @@ import { redisConnection } from "./config/redis";
 import { QUEUE_NAMES } from "./constants";
 import {
   FileSummarizationJobData,
-  ReadmeGenerationJobData,
+  ModuleGenerationJobData,
   RepoIngestionJobData,
 } from "./schemas";
 
@@ -30,8 +30,8 @@ export const fileSummarizationQueue = new Queue<FileSummarizationJobData>(
   queueOptions
 );
 
-export const readmeGenerationQueue = new Queue<ReadmeGenerationJobData>(
-  QUEUE_NAMES.README_GENERATION,
+export const moduleGenerationQueue = new Queue<ModuleGenerationJobData>(
+  QUEUE_NAMES.MODULE_GENERATION,
   queueOptions
 );
 
@@ -53,7 +53,7 @@ export async function wipeAllQueues() {
   await Promise.all([
     deleteAllJobsInQueue(repositoryIngestionQueue),
     deleteAllJobsInQueue(fileSummarizationQueue),
-    deleteAllJobsInQueue(readmeGenerationQueue),
+    deleteAllJobsInQueue(moduleGenerationQueue),
   ]);
 
   console.log("✨ All queues have been completely cleared.");

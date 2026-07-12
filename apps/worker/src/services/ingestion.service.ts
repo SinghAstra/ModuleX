@@ -10,11 +10,10 @@ import { fileSummarizationQueue, trackProgress } from "@repo/shared/server";
 import { exec } from "node:child_process";
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { getWorkspacePath } from "../utils/workspace.js";
-import { readmeService } from "./readme.service.js";
+import { moduleService } from "./module.service.js";
 
 const execAsync = promisify(exec);
 
@@ -291,10 +290,10 @@ export const ingestionService = {
           jobId,
           repositoryId: repo.id,
           status: JOB_STATUS.RUNNING,
-          message: "Files removed. Regenerating README...",
+          message: "Files removed. Remapping architecture...",
         });
 
-        await readmeService.triggerReadmeGeneration(repo.id, jobId);
+        await moduleService.triggerModuleGeneration(repo.id, jobId);
       } else {
         await prisma.repository.update({
           where: { id: repo.id },
