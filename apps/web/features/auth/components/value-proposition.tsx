@@ -18,8 +18,9 @@ export function ValueProposition() {
         <blockquote className="space-y-4 relative z-10">
           <p className="text-2xl leading-relaxed font-semibold text-balance">
             {siteConfig.name} is absolute magic. Dropped an undocumented legacy
-            repo in, and it instantly generated a production-ready README with a
-            complete architectural breakdown. Writing docs is finally solved.
+            repo in, and it instantly visualized the file structure with a
+            complete architectural breakdown. Understanding complex codebases is
+            finally solved.
           </p>
           <div className="flex items-center gap-3 pt-4">
             <Avatar className="h-12 w-12">
