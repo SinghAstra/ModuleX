@@ -1,5 +1,5 @@
 import { RepositoryStatus } from "@repo/shared";
-import { Cpu, Link2, FileText } from "lucide-react";
+import { Cpu, FolderTree, Link2 } from "lucide-react";
 
 export const processSteps = [
   {
@@ -15,10 +15,10 @@ export const processSteps = [
     icon: Cpu,
   },
   {
-    title: "Get Your README",
+    title: "Explore the Codebase",
     description:
-      "Instantly receive a perfect, production-ready README file complete with a system overview, tech stack, and core module breakdown.",
-    icon: FileText,
+      "Instantly navigate an interactive file tree alongside high-level architectural summaries to understand how everything works.",
+    icon: FolderTree,
   },
 ];
 
@@ -27,70 +27,70 @@ export const reviews = [
     name: "Michael Chen",
     rating: 5,
     review:
-      "A total lifesaver. ReadmeX generated a complete architecture guide for a legacy codebase in seconds. It perfectly explained the system.",
+      "A total lifesaver. ModuleX mapped out the complete architecture for a legacy codebase in seconds. Onboarding used to take weeks.",
   },
   {
     name: "Emily Watson",
     rating: 5,
     review:
-      "The generated documentation is incredible. It doesn't just list files; it actually understands and explains the system design in plain English.",
+      "The generated module summaries are incredible. It doesn't just list files; it actually explains the system design in plain English.",
   },
   {
     name: "David Kumar",
     rating: 5,
     review:
-      "I use this to document all my open-source projects. It saves me hours of writing and formatting markdown files.",
+      "I use this to explore large open-source projects before contributing. It saves me hours of reading through nested folders.",
   },
   {
     name: "Sophia Rossi",
     rating: 4,
     review:
-      "Fantastic tool. It gave me a clear system overview and extracted the exact tech stack without me having to write a single word.",
+      "Fantastic tool. It gave me a clear system overview and broke down the exact tech stack of a massive monorepo instantly.",
   },
   {
     name: "James Thompson",
     rating: 5,
     review:
-      "Absolutely game-changing. We use it to automatically generate high-level documentation for every new module in our monorepo.",
+      "Absolutely game-changing. We use it to quickly visualize high-level directory structures for every new service our team inherits.",
   },
   {
     name: "Olivia Zhang",
     rating: 4,
     review:
-      "Simple, effective, and fast. It takes messy, undocumented code and turns it into beautiful, structured documentation instantly.",
+      "Simple, effective, and fast. It takes messy, undocumented code and turns it into a structured, easy-to-navigate dashboard.",
   },
   {
     name: "William Smith",
     rating: 5,
     review:
-      "ReadmeX is now a permanent part of my workflow. Writing docs used to be a chore, but now it is done with one click.",
+      "ModuleX is now a permanent part of my workflow. Getting up to speed on new client projects is done with one click.",
   },
   {
     name: "Mia Lindholm",
     rating: 5,
     review:
-      "Other tools just give you a giant, unreadable graph diagram. ReadmeX actually gives you clean, readable, and professional markdown.",
+      "Other tools just give you a giant, unreadable graph diagram. ModuleX actually gives you a clean file tree with human-readable context.",
   },
   {
     name: "Henry Fletcher",
     rating: 5,
     review:
-      "This transformed our team. We drop a link into ReadmeX to instantly generate a high-level map of the codebase before writing new features.",
+      "This transformed our team. We drop a link into ModuleX to instantly generate a high-level map of the codebase before writing new features.",
   },
 ];
 
 export const FAQ = [
   {
     id: "item-1",
-    question: "How does ReadmeX work?",
+    question: "How does ModuleX work?",
     answer:
-      "Just paste a GitHub link. Our AI groups your code into logical modules, understands the architecture, and writes a complete README file for you.",
+      "Just paste a GitHub link. Our AI groups your code into logical modules, understands the architecture, and builds an interactive dashboard to explore the codebase.",
   },
   {
     id: "item-2",
     question: "Do I need to download or clone anything?",
     answer:
-      "Not at all! ReadmeX runs entirely in your browser. You don't have to download heavy folders. Paste the link, and we handle the rest.",
+      "Not at all! ModuleX runs entirely in your browser. You don't have to download heavy folders. Paste the link, and we handle the rest.",
   },
   {
     id: "item-3",
@@ -108,25 +108,25 @@ export const FAQ = [
     id: "item-5",
     question: "Can it handle massive or messy codebases?",
     answer:
-      "Yes! ReadmeX is built for that. We smartly group related files together so the AI understands the broad architecture without getting overwhelmed by messy details.",
+      "Yes! ModuleX is built for that. We smartly group related files together so the AI understands the broad architecture without getting overwhelmed by messy details.",
   },
   {
     id: "item-6",
     question: "Can I use it on private repositories?",
     answer:
-      "Right now, ReadmeX works with public GitHub repositories. Private repository support is our top priority and is launching very soon.",
+      "Right now, ModuleX works with public GitHub repositories. Private repository support is our top priority and is launching very soon.",
   },
   {
     id: "item-7",
-    question: "Are the generated READMEs actually accurate?",
+    question: "Are the generated summaries actually accurate?",
     answer:
-      "Yes. Our AI looks at how files and folders talk to each other across the entire codebase to write an accurate, high-level system overview.",
+      "Yes. Our AI analyzes how files and folders interact across the entire codebase to write accurate, high-level summaries of each module.",
   },
   {
     id: "item-8",
-    question: "Who is ReadmeX built for?",
+    question: "Who is ModuleX built for?",
     answer:
-      "It is perfect for developers who hate writing documentation, open-source maintainers, or tech leads who need quick architecture guides for legacy projects.",
+      "It is perfect for developers onboarding to new projects, open-source contributors, or tech leads who need to quickly visualize the architecture of legacy systems.",
   },
 ];
 

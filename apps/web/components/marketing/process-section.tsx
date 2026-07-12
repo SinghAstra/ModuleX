@@ -26,12 +26,12 @@ const ProcessSection = () => {
           </MovingBorder>
 
           <h2 className="text-center text-3xl md:text-5xl font-medium tracking-tight mt-4 text-balance">
-            Perfect documentation in 3 simple steps
+            Understand any codebase
           </h2>
 
           <p className="text-center lg:text-center text-lg tracking-normal leading-relaxed text-muted-foreground max-w-lg text-balance">
-            Drop a link, let our AI map the architecture, and get a production
-            ready README without writing a single word.
+            Drop a link, let our AI map the architecture, and instantly explore
+            your project&apos;s modules and file structure.
           </p>
         </div>
       </motion.div>
