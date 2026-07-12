@@ -42,13 +42,13 @@ export default function HeroSection() {
         </Link>
 
         <h1 className="text-center py-4 text-5xl font-medium tracking-tight sm:text-6xl md:text-7xl lg:text-8xl leading-[1.05] text-balance max-w-5xl">
-          Generate a perfect README.{" "}
+          Visualize any codebase.{" "}
           <span className="opacity-40">In seconds.</span>
         </h1>
 
         <p className="mb-10 text-base tracking-normal leading-relaxed text-muted-foreground md:text-xl text-balance max-w-2xl">
-          Instantly turn any undocumented repository into a production ready
-          README with a complete architectural breakdown, powered by AI.
+          Instantly analyze any GitHub repository to explore its file structure,
+          module summaries, and high-level architecture, powered by AI.
         </p>
 
         <Link href={ROUTES.SIGN_UP}>
