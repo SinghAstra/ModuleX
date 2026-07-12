@@ -1,8 +1,9 @@
-import z from "zod";
-import { repositoryDataSchema } from "../../schemas";
+import { z } from "zod";
+import { moduleSummaryDataSchema, repositoryDataSchema } from "../../schemas";
 
 export const getRepositoryResponseSchema = repositoryDataSchema.extend({
-  latestJobId: z.uuid().nullable(),
+  latestJobId: z.string().uuid().nullable(),
+  moduleSummaries: z.array(moduleSummaryDataSchema).optional(),
 });
 
 export type GetRepositoryResponse = z.infer<typeof getRepositoryResponseSchema>;

@@ -48,6 +48,12 @@ export const repositoryDataSchema = z.object({
   updatedAt: z.iso.datetime(),
 });
 
+export const moduleSummaryDataSchema = z.object({
+  id: z.string().uuid(),
+  path: z.string(),
+  summary: z.string(),
+});
+
 export const repositoryFileDataSchema = z.object({
   id: z.uuid(),
   repositoryId: z.uuid(),

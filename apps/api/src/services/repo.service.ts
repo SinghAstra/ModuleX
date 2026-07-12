@@ -18,8 +18,6 @@ import {
 } from "@repo/shared/server";
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
-import os from "node:os";
-import path from "node:path";
 import { BadRequestError, NotFoundError } from "../errors/api-errors.js";
 import { buildRepositoryTree } from "../lib/build-tree.js";
 
@@ -72,8 +70,6 @@ export const repositoryService = {
     }
 
     const repositoryId = crypto.randomUUID();
-    const uniqueDiskPath = path.join(os.tmpdir(), "summary-x", repositoryId);
-
     const repositoryAvatarUrl = `https://github.com/${owner}.png`;
 
     try {
@@ -169,6 +165,13 @@ export const repositoryService = {
           take: 1,
           select: { id: true },
         },
+        moduleSummaries: {
+          select: {
+            id: true,
+            path: true,
+            summary: true,
+          },
+        },
       },
     });
 
@@ -196,6 +199,11 @@ export const repositoryService = {
       totalSize: repo.totalSize.toString(),
       createdAt: repo.createdAt.toISOString(),
       updatedAt: repo.updatedAt.toISOString(),
+      moduleSummaries: repo.moduleSummaries.map((ms) => ({
+        id: ms.id,
+        path: ms.path,
+        summary: ms.summary,
+      })),
     };
   },
 
