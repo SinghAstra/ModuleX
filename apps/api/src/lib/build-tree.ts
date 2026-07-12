@@ -1,11 +1,12 @@
-import { RepositoryFile } from "@prisma/client";
+import { ModuleSummary, RepositoryFile } from "@prisma/client";
 import { FileSummaryStatus, RepositoryTreeNode } from "@repo/shared";
 
 export function buildRepositoryTree(
-  files: RepositoryFile[]
+  files: RepositoryFile[],
+  moduleSummaries: ModuleSummary[]
 ): RepositoryTreeNode[] {
-  console.log(
-    `📊 [Tree Builder] Starting compilation. Total raw records received: ${files.length}`
+  const moduleSummaryMap = new Map(
+    moduleSummaries.map((ms) => [ms.path, ms.summary])
   );
 
   const root: RepositoryTreeNode = {
@@ -26,11 +27,6 @@ export function buildRepositoryTree(
       const isLastPart = i === parts.length - 1;
       const runningPath = parts.slice(0, i + 1).join("/");
 
-      // Check what items currently exist in the current folder tier
-      const currentChildrenNames = currentElement.children.map(
-        (c) => `${c.name} (${c.type})`
-      );
-
       let targetNode = currentElement.children.find(
         (child) => child.name === part
       );
@@ -40,17 +36,21 @@ export function buildRepositoryTree(
           name: part,
           relativePath: runningPath,
           type: isLastPart ? "file" : "folder",
-          ...(isLastPart && {
-            fileId: file.id,
-            extension: file.extension,
-            size: file.size,
-            summaryStatus: file.summaryStatus as FileSummaryStatus,
-            summary: file.summary,
-          }),
+          ...(isLastPart
+            ? {
+                fileId: file.id,
+                extension: file.extension,
+                size: file.size,
+                summaryStatus: file.summaryStatus as FileSummaryStatus,
+                summary: file.summary,
+              }
+            : {
+                moduleSummary: moduleSummaryMap.get(runningPath) || null,
+              }),
           children: [],
         };
 
-        (currentElement.children as RepositoryTreeNode[]).push(targetNode);
+        currentElement.children.push(targetNode);
       }
 
       currentElement = targetNode;
@@ -69,7 +69,5 @@ export function buildRepositoryTree(
       });
   };
 
-  const finalTree = sortTreeNodes(root.children);
-
-  return finalTree;
+  return sortTreeNodes(root.children);
 }

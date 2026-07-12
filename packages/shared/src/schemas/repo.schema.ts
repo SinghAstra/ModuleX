@@ -78,6 +78,7 @@ export interface RepositoryTreeNode {
   size?: number;
   summaryStatus?: z.infer<typeof fileSummaryStatusSchema>;
   summary?: string | null;
+  moduleSummary?: string | null;
   children: RepositoryTreeNode[];
 }
 
@@ -92,6 +93,7 @@ export const repositoryTreeNodeSchema: z.ZodType<RepositoryTreeNode> = z.lazy(
       size: z.number().int().nonnegative().optional(),
       summaryStatus: fileSummaryStatusSchema.optional(),
       summary: z.string().nullable().optional(),
+      moduleSummary: z.string().nullable().optional(),
       children: z.array(repositoryTreeNodeSchema),
     })
 );
