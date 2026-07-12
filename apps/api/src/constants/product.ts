@@ -1,1 +1,1 @@
-export const PRODUCT_NAME = "ReadmeX";
+export const PRODUCT_NAME = "ModuleX";
