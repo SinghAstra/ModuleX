@@ -12,5 +12,5 @@ async function bootstrap() {
 void bootstrap();
 // await wipeAllQueues();
 export * from "./workers/ingestion.worker.js";
-export * from "./workers/readme.worker.js";
+export * from "./workers/module.worker.js";
 export * from "./workers/summarization.worker.js";

@@ -57,7 +57,6 @@ export const moduleService = {
       const buckets = await moduleService.prepareBuckets(repositoryId);
       let runId = 0;
 
-      // 1. Initial State Message
       await trackProgress({
         jobId,
         repositoryId,
@@ -98,7 +97,6 @@ export const moduleService = {
         });
         runId++;
 
-        // 2. Loop Iteration Message
         await trackProgress({
           jobId,
           repositoryId,
@@ -122,7 +120,6 @@ export const moduleService = {
         },
       });
 
-      // 3. Success Message
       await trackProgress({
         jobId,
         repositoryId,
@@ -132,7 +129,6 @@ export const moduleService = {
     } catch (error) {
       logError(error);
 
-      // 4. Error Message
       await trackProgress({
         jobId,
         repositoryId,
