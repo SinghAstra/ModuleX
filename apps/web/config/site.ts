@@ -1,12 +1,12 @@
 import { SiteConfig } from "@/types/site";
 
 export const siteConfig: SiteConfig = {
-  name: "ModuleX",
+  name: "CombineX",
   description:
     "Instantly visualize project modules, file structures, and high-level architectural summaries for any GitHub repository using AI.",
-  url: "https://modulex.vercel.app",
+  url: "https://combineX.vercel.app",
   keywords: [
-    "ModuleX",
+    "CombineX",
     "Codebase Visualization",
     "AI Architecture Mapping",
     "Module Summaries",
@@ -20,6 +20,6 @@ export const siteConfig: SiteConfig = {
   links: {
     twitter: "https://x.com/XSinghAstra",
     github: "https://github.com/SinghAstra",
-    githubRepo: "https://github.com/SinghAstra/ModuleX",
+    githubRepo: "https://github.com/SinghAstra/CombineX",
   },
 };

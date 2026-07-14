@@ -1,1 +1,1 @@
-export const PRODUCT_NAME = "ModuleX";
+export const PRODUCT_NAME = "CombineX";
