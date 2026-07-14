@@ -211,7 +211,7 @@ async function updateGlobalProgress(
       jobId,
       repositoryId,
       status: JOB_STATUS.RUNNING,
-      message: "Summarization complete! Generating final README...",
+      message: "Summarization complete! Grouping Project Files...",
     });
 
     await moduleService.triggerModuleGeneration(repositoryId, jobId);
