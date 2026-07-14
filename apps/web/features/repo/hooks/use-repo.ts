@@ -12,6 +12,8 @@ export const repoQueryFn = async (
     throw new Error(response.error.message);
   }
 
+  console.log("Get Repo : ", response.data);
+
   return response.data;
 };
 

@@ -18,9 +18,11 @@ export async function trackProgress({
   status,
   message,
 }: TelemetryOptions) {
-  await prisma.jobLog.create({
+  const log = await prisma.jobLog.create({
     data: { jobId, message },
   });
+
+  console.log("log is ", log);
 
   const channelCoordinate = getJobTelemetryChannel(jobId);
   const eventPayload: TelemetryEvent = {
