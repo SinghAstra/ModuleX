@@ -5,6 +5,7 @@ import { type RepositoryTreeNode } from "@repo/shared";
 import {
   ChevronDown,
   ChevronRight,
+  Cpu,
   FileText,
   Folder,
   FolderOpen,
@@ -102,8 +103,22 @@ export function TreeNodeItem({
         </div>
       )}
 
+      {isFolder && isFolderOpen && node.moduleSummary && (
+        <div className="pl-4 pr-3 py-3 my-2 ml-6 bg-primary/5 border border-primary/15 rounded-md text-xs text-foreground/90 font-sans shadow-sm animate-in fade-in slide-in-from-top-1 duration-150">
+          <div className="flex items-center gap-1.5 mb-2 border-b border-primary/10 pb-1.5">
+            <Cpu className="size-3.5 text-primary" />
+            <h4 className="text-[10px] font-bold uppercase tracking-widest text-primary">
+              Module Architecture
+            </h4>
+          </div>
+          <div className="whitespace-pre-wrap leading-relaxed opacity-90">
+            {node.moduleSummary}
+          </div>
+        </div>
+      )}
+
       {isFolder && isFolderOpen && node.children.length > 0 && (
-        <div className="pl-3.5 ml-2 border-l border-border/40 mt-0.5 space-y-0.5">
+        <div className="pl-3.5 ml-2 border-l border-border/40 mt-0.5 space-y-0.5 animate-in fade-in duration-200">
           <ul className="space-y-0.5">
             {node.children.map((child) => (
               <TreeNodeItem

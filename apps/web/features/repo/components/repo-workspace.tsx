@@ -82,18 +82,18 @@ export function RepositoryWorkspace({ repo }: RepositoryWorkspaceProps) {
 
     const compiledText = compileProjectSummaryText(treeNodes);
     if (!compiledText) {
-      toast.error("No file summaries are ready to copy yet.");
+      toast.error("Architecture map is not ready yet.");
       return;
     }
 
     try {
       await navigator.clipboard.writeText(compiledText);
       toast.success(
-        `Copied ${allCompletedFilePaths.length} file summaries to clipboard!`
+        `Copied full architecture map (${allCompletedFilePaths.length} files) to clipboard!`
       );
     } catch (error) {
       logError(error);
-      toast.error("Failed to copy summaries to clipboard.");
+      toast.error("Failed to copy map to clipboard.");
     }
   };
 
