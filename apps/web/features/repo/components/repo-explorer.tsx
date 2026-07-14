@@ -7,17 +7,13 @@ import { RepoTreeList } from "./tree/repo-tree-list";
 interface RepositoryExplorerProps {
   repositoryId: string;
   expandedFolders: Set<string>;
-  expandedSummaries: Set<string>;
   onToggleFolder: (path: string) => void;
-  onToggleSummary: (fileId: string) => void;
 }
 
 export function RepositoryExplorer({
   repositoryId,
   expandedFolders,
-  expandedSummaries,
   onToggleFolder,
-  onToggleSummary,
 }: RepositoryExplorerProps) {
   const { data: treeNodes = [], isLoading } = useRepositoryFiles(repositoryId);
 
@@ -45,9 +41,7 @@ export function RepositoryExplorer({
         <RepoTreeList
           nodes={treeNodes}
           expandedFolders={expandedFolders}
-          expandedSummaries={expandedSummaries}
           onToggleFolder={onToggleFolder}
-          onToggleSummary={onToggleSummary}
         />
       </div>
     </div>

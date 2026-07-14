@@ -5,7 +5,6 @@ import { RepoHeader } from "@/features/repo/components/repo-header";
 import { useRepositoryFiles } from "@/features/repo/hooks/use-repo-files";
 import {
   compileProjectSummaryText,
-  extractAllCompletedFilePaths,
   extractAllFolderPaths,
 } from "@/features/repo/utils/tree-utils";
 import { logError } from "@repo/shared";
@@ -24,30 +23,11 @@ export function RepositoryWorkspace({ repo }: RepositoryWorkspaceProps) {
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
     new Set()
   );
-  const [expandedSummaries, setExpandedSummaries] = useState<Set<string>>(
-    new Set()
-  );
-
-  const [prevCompletedCount, setPrevCompletedCount] = useState(0);
 
   const allFolderPaths = extractAllFolderPaths(treeNodes);
-  const allCompletedFilePaths = extractAllCompletedFilePaths(treeNodes);
-
-  if (allCompletedFilePaths.length !== prevCompletedCount) {
-    setPrevCompletedCount(allCompletedFilePaths.length);
-
-    if (
-      allFolderPaths.length > 0 &&
-      expandedFolders.size === allFolderPaths.length
-    ) {
-      setExpandedSummaries(new Set(allCompletedFilePaths));
-    }
-  }
 
   const isExpandedAll =
-    allFolderPaths.length > 0 &&
-    expandedFolders.size === allFolderPaths.length &&
-    expandedSummaries.size === allCompletedFilePaths.length;
+    allFolderPaths.length > 0 && expandedFolders.size === allFolderPaths.length;
 
   const handleToggleFolder = useCallback((path: string) => {
     setExpandedFolders((prev) => {
@@ -58,22 +38,11 @@ export function RepositoryWorkspace({ repo }: RepositoryWorkspaceProps) {
     });
   }, []);
 
-  const handleToggleSummary = useCallback((fileId: string) => {
-    setExpandedSummaries((prev) => {
-      const next = new Set(prev);
-      if (next.has(fileId)) next.delete(fileId);
-      else next.add(fileId);
-      return next;
-    });
-  }, []);
-
   const handleToggleExpandAll = (): void => {
     if (isExpandedAll) {
       setExpandedFolders(new Set());
-      setExpandedSummaries(new Set());
     } else {
       setExpandedFolders(new Set(allFolderPaths));
-      setExpandedSummaries(new Set(allCompletedFilePaths));
     }
   };
 
@@ -88,9 +57,7 @@ export function RepositoryWorkspace({ repo }: RepositoryWorkspaceProps) {
 
     try {
       await navigator.clipboard.writeText(compiledText);
-      toast.success(
-        `Copied full architecture map (${allCompletedFilePaths.length} files) to clipboard!`
-      );
+      toast.success("Copied full architecture map to clipboard!");
     } catch (error) {
       logError(error);
       toast.error("Failed to copy map to clipboard.");
@@ -109,9 +76,7 @@ export function RepositoryWorkspace({ repo }: RepositoryWorkspaceProps) {
         <RepositoryExplorer
           repositoryId={repo.id}
           expandedFolders={expandedFolders}
-          expandedSummaries={expandedSummaries}
           onToggleFolder={handleToggleFolder}
-          onToggleSummary={handleToggleSummary}
         />
       </main>
     </div>

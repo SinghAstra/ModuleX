@@ -15,28 +15,21 @@ import React from "react";
 interface TreeNodeItemProps {
   node: RepositoryTreeNode;
   expandedFolders: Set<string>;
-  expandedSummaries: Set<string>;
   onToggleFolder: (path: string) => void;
-  onToggleSummary: (path: string) => void;
 }
 
 export function TreeNodeItem({
   node,
   expandedFolders,
   onToggleFolder,
-  expandedSummaries,
-  onToggleSummary,
 }: TreeNodeItemProps) {
   const isFolder = node.type === "folder";
   const isFolderOpen = expandedFolders.has(node.relativePath);
-  const isSummaryOpen = expandedSummaries.has(node.relativePath);
 
   const handleClick = (e: React.MouseEvent): void => {
     e.stopPropagation();
     if (isFolder) {
       onToggleFolder(node.relativePath);
-    } else if (node.summaryStatus === "COMPLETED") {
-      onToggleSummary(node.relativePath);
     }
   };
 
@@ -45,10 +38,10 @@ export function TreeNodeItem({
       <div
         onClick={handleClick}
         className={cn(
-          "flex items-center gap-2 px-2 py-1.5 rounded-md transition-all duration-150 cursor-pointer group select-none relative",
-          isSummaryOpen
-            ? "bg-muted/60 text-foreground"
-            : "hover:bg-muted/50 text-muted-foreground hover:text-foreground"
+          "flex items-center gap-2 px-2 py-1.5 rounded-md transition-all duration-150 group select-none relative",
+          isFolder
+            ? "cursor-pointer hover:bg-muted/50 text-muted-foreground hover:text-foreground"
+            : "text-muted-foreground"
         )}
       >
         <div className="size-4 flex items-center justify-center shrink-0">
@@ -67,7 +60,7 @@ export function TreeNodeItem({
             <Folder className="size-4 text-primary/70 fill-primary/5 shrink-0" />
           )
         ) : (
-          <FileText className="size-4 shrink-0 text-muted-foreground/40 group-hover:text-muted-foreground/70" />
+          <FileText className="size-4 shrink-0 text-muted-foreground/40" />
         )}
 
         <span className="truncate font-medium text-foreground/80">
@@ -97,12 +90,6 @@ export function TreeNodeItem({
         )}
       </div>
 
-      {!isFolder && node.summaryStatus === "COMPLETED" && isSummaryOpen && (
-        <div className="pl-4 pr-3 py-2.5 my-1 ml-6 bg-muted/30 border border-border/40 rounded text-xs text-muted-foreground/90 font-sans whitespace-pre-wrap leading-relaxed shadow-inner animate-in fade-in slide-in-from-top-1 duration-150">
-          {node.summary || "No summary available for this file."}
-        </div>
-      )}
-
       {isFolder && isFolderOpen && node.moduleSummary && (
         <div className="pl-4 pr-3 py-3 my-2 ml-6 bg-primary/5 border border-primary/15 rounded-md text-xs text-foreground/90 font-sans shadow-sm animate-in fade-in slide-in-from-top-1 duration-150">
           <div className="flex items-center gap-1.5 mb-2 border-b border-primary/10 pb-1.5">
@@ -126,8 +113,6 @@ export function TreeNodeItem({
                 node={child}
                 expandedFolders={expandedFolders}
                 onToggleFolder={onToggleFolder}
-                expandedSummaries={expandedSummaries}
-                onToggleSummary={onToggleSummary}
               />
             ))}
           </ul>
